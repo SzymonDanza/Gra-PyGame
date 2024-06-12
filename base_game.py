@@ -53,8 +53,8 @@ class Player(Alive):
         self.rect.y += self.y_speed
 
         # Check if player is on the ground
-        if self.rect.bottom >= 600:
-            self.rect.bottom = 600
+        if self.rect.bottom >= 740:
+            self.rect.bottom = 740
             self.y_speed = 0
             self.on_ground = True
 
