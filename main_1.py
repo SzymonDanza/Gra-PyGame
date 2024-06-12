@@ -1,6 +1,6 @@
 import  pygame,os,random
 
-from base_game import Alive
+from base_game import Alive, Player
 
 pygame.init()
 
@@ -18,11 +18,12 @@ file_names.remove('background.jpg')
 
 IMAGES = {}
 for file_name in file_names:
-    image_name = file_name[:-4].upper()
+    image_name = file_name[:-4]
     IMAGES[image_name] = pygame.image.load(os.path.join(path, file_name)).convert_alpha(BACKGROUND)
 
 
-Test=Alive(IMAGES['background.jpg'],100,100)
+
+Test=Player(IMAGES['testGrafika1'],100,100,2)
 
 
 
@@ -35,6 +36,8 @@ Test=Alive(IMAGES['background.jpg'],100,100)
 
 window_open = True
 while window_open:
+    Test.move(pygame.key.get_pressed())
+
     for event in pygame.event.get():
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
@@ -46,7 +49,9 @@ while window_open:
     Test.draw(screen)
 
     pygame.display.flip()
+    screen.blit(BACKGROUND, (-300, -300))
     clock.tick(60)
+
 
 pygame.quit()
 
