@@ -1,4 +1,4 @@
-class Fraction:
+class Fraction22222222222222222222:
     @staticmethod
     def gcd(a,b):
         a = abs(a)
