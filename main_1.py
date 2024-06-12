@@ -1,6 +1,6 @@
 import  pygame,os,random
 
-from base_game import Alive, Player
+from base_game import Alive, Player, Level, BasicPlatform
 
 pygame.init()
 
@@ -23,7 +23,9 @@ for file_name in file_names:
 
 
 
-Test=Player(IMAGES['testGrafika1'],100,100,2)
+
+Test_Level = Level(BACKGROUND, 100, 200, screen, IMAGES['testGrafika1'])
+Test=Player(IMAGES['testGrafika1'],100,100,2, Test_Level)
 
 
 
@@ -38,6 +40,7 @@ window_open = True
 while window_open:
     Test.move(pygame.key.get_pressed())
 
+
     for event in pygame.event.get():
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
@@ -48,8 +51,11 @@ while window_open:
 
     Test.draw(screen)
 
+
+
     pygame.display.flip()
-    screen.blit(BACKGROUND, (-300, -300))
+    Test_Level.add_basic_platform()
+    Test_Level.update_level()
     clock.tick(60)
 
 

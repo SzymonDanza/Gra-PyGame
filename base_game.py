@@ -1,4 +1,8 @@
+from asyncio import sleep
+import random
+
 import pygame
+
 
 
 class Base(pygame.sprite.Sprite):
@@ -19,21 +23,58 @@ class Alive(Base):
 
 
 class Player(Alive):
-    def __init__(self,image,x,y,life):
+    def __init__(self,image,x,y,life, level):
         super().__init__(image,x,y,life)
+        self.level = level
+
     def move(self,key):
         self.get_event(key)
 
+
+        if self.rect.top < 0:
+            self.rect.top = 0
+
+
     def get_event(self, key_pressed):
         if key_pressed[pygame.K_LEFT]:
-            self.rect.move_ip([-2, 0])
+            self.rect.move_ip([-5, 0])
         if key_pressed[pygame.K_RIGHT]:
-            self.rect.move_ip([2, 0])
-        if key_pressed[pygame.K_UP]:
-            self.rect.move_ip([0, -2])
+            self.rect.move_ip([5, 0])
+        if key_pressed[pygame.K_UP] and pygame.sprite.spritecollideany(self, self.level.set_of_environment):
+            self.rect.move_ip([0, -100])
+
+
+        if not pygame.sprite.spritecollideany(self, self.level.set_of_environment):
+            self.rect.move_ip([0, 3])
       #  if key_pressed[pygame.K_DOWN]:
            # self.rect.move_ip([0, 2])
 
-class enviroment(Base):
-    def __init__(self,image,x,y):
+
+class Environment(Base):
+    def __init__(self, image, x, y):
         super().__init__(image, x, y)
+
+
+class BasicPlatform(Environment):
+    def __init__(self, image, x, y):
+        super().__init__(image, x, y)
+
+
+class Level(Base):
+    def __init__(self, image, x, y, surface, image_platform):
+        super().__init__(image, x, y)
+        self.set_of_environment = pygame.sprite.Group()
+        self.surface = surface
+        self.image_platform = image_platform
+
+    def update_level(self):
+        self.surface.blit(self.image, (-300, -300))
+        self.set_of_environment.update()
+        self.set_of_environment.draw(self.surface)
+
+    def add_basic_platform(self):
+        if random.randint(1, 10) == 1 and len(self.set_of_environment) < 10:
+            m = BasicPlatform(self.image_platform, random.randint(1, 1300), random.randint(1, 700))
+            if not pygame.sprite.spritecollideany(m, self.set_of_environment):
+                self.set_of_environment.add(m)
+
