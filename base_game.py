@@ -10,7 +10,8 @@ class Base(pygame.sprite.Sprite):
         super().__init__()
         self.image = image
         self.rect = self.image.get_rect()
-        self.rect.center = x,y
+        self.rect.right = x
+        self.rect.bottom = y
 
     def draw(self,surface):
         surface.blit(self.image,self.rect)
@@ -26,29 +27,56 @@ class Player(Alive):
     def __init__(self,image,x,y,life, level):
         super().__init__(image,x,y,life)
         self.level = level
+        self.right_speed = 0
+        self.left_speed = 0
+        self.up_speed = 0
+
+        self.right_speed = 0
+        self.left_speed = 0
+        self.y_speed = 0  # Vertical speed
+        self.on_ground = False  # To check if the player is on the ground
+
 
     def move(self,key):
-        self.get_event(key)
+        gravity = 1
+
+        if key[pygame.K_LEFT]:
+            self.rect.x -= 5
+        if key[pygame.K_RIGHT]:
+            self.rect.x += 5
+        if key[pygame.K_SPACE] and self.on_ground:
+            self.y_speed = -15  # Adjust this value for jump strength
+            self.on_ground = False
+
+        # Apply gravity
+        self.y_speed += gravity
+        self.rect.y += self.y_speed
+
+        # Check if player is on the ground
+        if self.rect.bottom >= 600:
+            self.rect.bottom = 600
+            self.y_speed = 0
+            self.on_ground = True
+
+        if pygame.sprite.spritecollideany(self, self.level.set_of_environment):
+            for e in self.level.set_of_environment:
+                if pygame.sprite.collide_rect(self, e) and (self.rect.bottom > e.rect.top) and (self.rect.top < e.rect.top) and (self.rect.top < e.rect.bottom):
+                    self.rect.bottom = e.rect.top
+                    self.y_speed = 0
+                    self.on_ground = True
+                elif pygame.sprite.collide_rect(self, e) and (self.rect.top < e.rect.bottom):
+                    self.rect.top = e.rect.bottom
+                    self.y_speed = 0
+                elif pygame.sprite.collide_rect(self, e) and (self.rect.left < e.rect.left):
+                    self.rect.right = e.rect.left
+                    self.y_speed = 0
+                elif pygame.sprite.collide_rect(self, e) and (self.rect.left > e.rect.left):
+                    self.rect.left = e.rect.right
+                    self.y_speed = 0
 
 
-        if self.rect.top < 0:
-            self.rect.top = 0
 
 
-    def get_event(self, key_pressed):
-        if key_pressed[pygame.K_LEFT]:
-            self.rect.move_ip([-5, 0])
-        if key_pressed[pygame.K_RIGHT]:
-            self.rect.move_ip([5, 0])
-        if key_pressed[pygame.K_UP] and pygame.sprite.spritecollideany(self, self.level.set_of_environment):
-            self.rect.move_ip([0, -100])
-        if not key_pressed[pygame.K_RIGHT]:
-            self.rect.move_ip([-2, 0])
-
-        if not pygame.sprite.spritecollideany(self, self.level.set_of_environment):
-            self.rect.move_ip([0, 3])
-      #  if key_pressed[pygame.K_DOWN]:
-           # self.rect.move_ip([0, 2])
 
 
 class Environment(Base):
@@ -71,6 +99,7 @@ class Level(Base):
         self.set_of_environment = pygame.sprite.Group()
         self.surface = surface
         self.image_platform = image_platform
+
 
     def update_level(self):
         self.surface.blit(self.image, (-300, -300))

@@ -25,7 +25,9 @@ for file_name in file_names:
 
 
 Test_Level = Level(BACKGROUND, 100, 200, screen, IMAGES['testGrafika1'])
-Test=Player(IMAGES['testGrafika1'],100,100,2, Test_Level)
+
+Test = Player(IMAGES['testGrafika1'], 100, 100, 2, Test_Level)
+
 
 
 
