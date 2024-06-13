@@ -114,30 +114,33 @@ class Level(Base):
         for e in self.set_of_environment:
             if e.rect.right < 0:
                 e.kill()
+            if e.rect.right > 500:
+                if e.rect.bottom == 650:
+                    e.remove(self.set_of_environment_low)
+                elif e.rect.bottom == 450:
+                    e.remove(self.set_of_environment_low)
+                elif e.rect.bottom == 250:
+                    e.remove(self.set_of_environment_low)
+
 
     def add_basic_platform(self):
-        if random.randint(1, 100) == 1 and len(self.set_of_environment) < 40 and (len(self.set_of_environment_low) < 2 or len(self.set_of_environment_mid) < 2 or len(self.set_of_environment_hig) < 2):
+        if random.randint(1, 100) == 1 and len(self.set_of_environment) < 40 and (len(self.set_of_environment_low) < 1 or len(self.set_of_environment_mid) < 1 or len(self.set_of_environment_hig) < 1):
             while True:
                 coin = random.randint(1,3)
-                if coin == 1 and len(self.set_of_environment_low) < 2:
+                if coin == 1 and len(self.set_of_environment_low) < 1:
                     y=650
                     break
-                elif coin == 2 and len(self.set_of_environment_mid) < 2:
+                elif coin == 2 and len(self.set_of_environment_mid) < 1:
                     y=450
                     break
-                elif coin == 3 and len(self.set_of_environment_hig) < 2:
+                elif coin == 3 and len(self.set_of_environment_hig) < 1:
                     y=250
                     break
 
 
 
             start_platform = BasicPlatform(self.image_platform_start, 1400, y)
-            if y == 650:
-                self.set_of_environment_low.add(start_platform)
-            if y == 450:
-                self.set_of_environment_mid.add(start_platform)
-            if y == 250:
-                self.set_of_environment_hig.add(start_platform)
+
 
 
             num_middle_segments = random.randint(1, 2)
@@ -154,6 +157,13 @@ class Level(Base):
             for e in middle_collection:
                 self.set_of_environment.add(e)
             self.set_of_environment.add(end_platform)
+
+            if y == 650:
+                self.set_of_environment_low.add(end_platform)
+            if y == 450:
+                self.set_of_environment_mid.add(end_platform)
+            if y == 250:
+                self.set_of_environment_hig.add(end_platform)
 
             print(self.set_of_environment_low)
 
