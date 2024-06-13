@@ -97,6 +97,9 @@ class Level(Base):
     def __init__(self, image, x, y, surface, image_platform_start, image_platform_middle, image_platform_end):
         super().__init__(image, x, y)
         self.set_of_environment = pygame.sprite.Group()
+        self.set_of_environment_low = pygame.sprite.Group()
+        self.set_of_environment_mid = pygame.sprite.Group()
+        self.set_of_environment_hig = pygame.sprite.Group()
         self.surface = surface
         self.image_platform_start = image_platform_start
         self.image_platform_middle = image_platform_middle
@@ -114,17 +117,27 @@ class Level(Base):
 
     def add_basic_platform(self):
         if random.randint(1, 100) == 1 and len(self.set_of_environment) < 40:
-            coin = random.randint(1,3)
-            if coin == 1:
-                y=650
-            elif coin == 2:
-                y=450
-            elif coin == 3:
-                y=250
+            while True:
+                coin = random.randint(1,3)
+                if coin == 1 and len(self.set_of_environment_low) < 2:
+                    y=650
+                    break
+                elif coin == 2 and len(self.set_of_environment_mid) < 2:
+                    y=450
+                    break
+                elif coin == 3 and len(self.set_of_environment_hig) < 2:
+                    y=250
+                    break
 
 
 
             start_platform = BasicPlatform(self.image_platform_start, 1400, y)
+            if y == 650:
+                self.set_of_environment_low.add(start_platform)
+            if y == 450:
+                self.set_of_environment_mid.add(start_platform)
+            if y == 250:
+                self.set_of_environment_hig.add(start_platform)
 
 
             num_middle_segments = random.randint(1, 2)
