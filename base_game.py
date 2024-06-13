@@ -31,7 +31,7 @@ class Alive(Base):
 
     def get_image(self, frame, width, height, scale, colour):
         image = pygame.Surface((width, height)).convert_alpha()
-        image.blit(self.image, (0, 0), ((frame * width), 0, width, height))
+        image.blit(self.image2, (0, 0), ((frame * width), 0, width, height))
         image = pygame.transform.scale(image, (width * scale, height * scale))
         image.set_colorkey(colour)
 
@@ -39,12 +39,14 @@ class Alive(Base):
 
 
 class Player(Alive):
-    def __init__(self,image,x,y,life, level,frame, width, height, scale, colour):
+    def __init__(self,image,x,y,life, level,frame, width, height, scale, colour, image2):
         super().__init__(image,x,y,life,frame, width, height, scale, colour)
         self.level = level
         self.right_speed = 0
         self.left_speed = 0
         self.up_speed = 0
+
+        self.image2 = image2
 
         self.right_speed = 0
         self.left_speed = 0
@@ -55,12 +57,17 @@ class Player(Alive):
         self.last_update = pygame.time.get_ticks()
         self.animation_cooldown = 75
         self.frame = frame
-        for x in range(self.animation_steps):
-            self.animation_list.append(self.get_image(x, width, height, scale, colour))
-            print(self.animation_list)
+
+
+
+        self.animation_list = [image2, image, image2]
+        self.frame_animation = self.animation_list[0]
 
     def draw(self,surface):
-        surface.blit(self.animation_list[self.frame], (self.rect.right, self.rect.top))
+        ##surface.blit(self.image,self.rect)
+
+        surface.blit(self.frame_animation, [self.rect.left, self.rect.top])
+
 
 
     def move(self,key):
@@ -100,12 +107,10 @@ class Player(Alive):
                     self.rect.left = e.rect.right
                     self.y_speed = 0
 
-        current_time = pygame.time.get_ticks()
-        if current_time - self.last_update >= self.animation_cooldown:
-            self.frame += 1
-            self.last_update = current_time
-            if self.frame >= len(self.animation_list):
-                self.frame = 0
+        self.frame_animation = self.animation_list[self.frame // 2]
+        self.frame = (self.frame + 1) % (len(self.animation_list) * 2)
+        print(self.frame)
+
 
 
 
@@ -216,6 +221,6 @@ class Level(Base):
             if y == 250:
                 self.set_of_environment_hig.add(end_platform)
 
-            print(self.set_of_environment_low)
+
 
 
