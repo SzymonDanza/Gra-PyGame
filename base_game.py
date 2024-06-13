@@ -46,6 +46,8 @@ class Player(Alive):
 
         self.jump_boost = False
         self.jump_boost_amount = 0
+        self.immunity = False
+        self.immunity_amount = 0
 
 
     def move(self,key):
@@ -70,6 +72,11 @@ class Player(Alive):
                         self.jump_boost = False
                 else:
                     self.y_speed = -20 #siła skoku
+                if self.immunity:
+                    self.immunity_amount -= 1
+                    if self.immunity_amount <= 0:
+                        self.immunity_amount = 0
+                        self.immunity = False
                 self.on_ground = False
 
         # Apply gravity
@@ -88,7 +95,7 @@ class Player(Alive):
                     self.rect.bottom = e.rect.top
                     self.y_speed = 0
                     self.on_ground = True
-                    if e.type == 1:
+                    if e.type == 1 and not self.immunity:
                         if not e.flag:
                             e.starttime = pygame.time.get_ticks()
                             ychange = -6
@@ -99,12 +106,12 @@ class Player(Alive):
                             e.flag = False
                             e.kill()
 
-                    if e.type == 2:
+                    if e.type == 2 and not self.immunity:
                         self.frozen = True
                         self.image = self.other_images[0]
                         self.starttime = pygame.time.get_ticks()
 
-                    if e.type == 3:
+                    if e.type == 3 and not self.immunity:
                         self.slip = True
 
 
@@ -133,7 +140,8 @@ class Player(Alive):
                     self.jump_boost_amount += 5
 
                 if e.type == 2:
-                    pass
+                    self.immunity = True
+                    self.immunity_amount += 7
 
 
 
