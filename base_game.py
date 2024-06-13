@@ -173,9 +173,9 @@ class Level(Base):
 
             if random.randint(1, 5) == 1:
                 type = 1
-                self.image_platform_start = self.other_platforms[1]
-                self.image_platform_middle = self.other_platforms[2]
-                self.image_platform_end = self.other_platforms[3]
+                self.image_platform_start = self.other_platforms[0]
+                self.image_platform_middle = self.other_platforms[1]
+                self.image_platform_end = self.other_platforms[2]
             else:
                 type = 0
 
