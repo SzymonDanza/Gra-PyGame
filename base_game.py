@@ -39,6 +39,8 @@ class Player(Alive):
         self.frozen = False
         self.starttime = 0
 
+        self.slip = False
+
         self.image_basic = image
         self.other_images = other_images
 
@@ -47,9 +49,15 @@ class Player(Alive):
         gravity = 1
         if not self.frozen:
             if key[pygame.K_LEFT]:
-                self.rect.x -= 7
+                if self.slip:
+                    self.rect.x -= 15
+                else:
+                    self.rect.x -= 7
             if key[pygame.K_RIGHT]:
-                self.rect.x += 7
+                if self.slip:
+                    self.rect.x += 15
+                else:
+                    self.rect.x += 7
             if key[pygame.K_SPACE] and self.on_ground:
                 self.y_speed = -20  # Adjust this value for jump strength
                 self.on_ground = False
@@ -86,6 +94,9 @@ class Player(Alive):
                         self.image = self.other_images[0]
                         self.starttime = pygame.time.get_ticks()
 
+                    if e.type == 3:
+                        self.slip = True
+
 
 
                 elif pygame.sprite.collide_rect(self, e) and (self.rect.top < e.rect.bottom):
@@ -101,6 +112,8 @@ class Player(Alive):
             if self.frozen == True and pygame.time.get_ticks() - self.starttime >= 100:
                 self.frozen = False
                 self.image = self.image_basic
+
+            self.slip = False
 
 
 
@@ -190,7 +203,7 @@ class Level(Base):
                     x=1400
                     break
 
-            coin = random.randint(1, 6)
+            coin = random.randint(1, 7)
             if coin == 1:
                 type = 1
                 self.image_platform_start = self.other_platforms[0]
@@ -201,6 +214,11 @@ class Level(Base):
                 self.image_platform_start = self.other_platforms[3]
                 self.image_platform_middle = self.other_platforms[4]
                 self.image_platform_end = self.other_platforms[5]
+            elif coin == 3:
+                type = 3
+                self.image_platform_start = self.other_platforms[6]
+                self.image_platform_middle = self.other_platforms[7]
+                self.image_platform_end = self.other_platforms[8]
             else:
                 type = 0
 
