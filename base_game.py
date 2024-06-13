@@ -94,11 +94,13 @@ class BasicPlatform(Environment):
 
 
 class Level(Base):
-    def __init__(self, image, x, y, surface, image_platform):
+    def __init__(self, image, x, y, surface, image_platform_start, image_platform_middle, image_platform_end):
         super().__init__(image, x, y)
         self.set_of_environment = pygame.sprite.Group()
         self.surface = surface
-        self.image_platform = image_platform
+        self.image_platform_start = image_platform_start
+        self.image_platform_middle = image_platform_middle
+        self.image_platform_end = image_platform_end
 
 
     def update_level(self):
@@ -111,14 +113,32 @@ class Level(Base):
                 e.kill()
 
     def add_basic_platform(self):
-        if random.randint(1, 50) == 1 and len(self.set_of_environment) < 5:
+        if random.randint(1, 100) == 1 and len(self.set_of_environment) < 50:
             coin = random.randint(1,3)
             if coin == 1:
-                m = BasicPlatform(self.image_platform, 1400, 650)
+                y=650
             elif coin == 2:
-                m = BasicPlatform(self.image_platform, 1400, 450)
+                y=450
             elif coin == 3:
-                m = BasicPlatform(self.image_platform, 1400, 250)
-            if not pygame.sprite.spritecollideany(m, self.set_of_environment):
-                self.set_of_environment.add(m)
+                y=250
+
+
+
+            start_platform = BasicPlatform(self.image_platform_start, 1400, y)
+
+
+            num_middle_segments = random.randint(1, 2)
+            for i in range(num_middle_segments):
+
+                middle_platform = BasicPlatform(self.image_platform_middle,
+                                                    1400 + (i-1)* self.image_platform_middle.get_width(), y)
+
+
+            end_platform = BasicPlatform(self.image_platform_end, 1400 + (
+                        num_middle_segments + 1) * self.image_platform_middle.get_width(), y)
+
+            self.set_of_environment.add(start_platform)
+            self.set_of_environment.add(middle_platform)
+            self.set_of_environment.add(end_platform)
+
 
