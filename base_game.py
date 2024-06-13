@@ -24,7 +24,7 @@ class Alive(Base):
 
 
 class Player(Alive):
-    def __init__(self,image,x,y,life, level):
+    def __init__(self,image,x,y,life, level, other_images):
         super().__init__(image,x,y,life)
         self.level = level
         self.right_speed = 0
@@ -36,17 +36,23 @@ class Player(Alive):
         self.y_speed = 0  # Vertical speed
         self.on_ground = False  # To check if the player is on the ground
 
+        self.frozen = False
+        self.starttime = 0
+
+        self.image_basic = image
+        self.other_images = other_images
+
 
     def move(self,key):
         gravity = 1
-
-        if key[pygame.K_LEFT]:
-            self.rect.x -= 7
-        if key[pygame.K_RIGHT]:
-            self.rect.x += 7
-        if key[pygame.K_SPACE] and self.on_ground:
-            self.y_speed = -20  # Adjust this value for jump strength
-            self.on_ground = False
+        if not self.frozen:
+            if key[pygame.K_LEFT]:
+                self.rect.x -= 7
+            if key[pygame.K_RIGHT]:
+                self.rect.x += 7
+            if key[pygame.K_SPACE] and self.on_ground:
+                self.y_speed = -20  # Adjust this value for jump strength
+                self.on_ground = False
 
         # Apply gravity
         self.y_speed += gravity
@@ -75,6 +81,13 @@ class Player(Alive):
                             e.flag = False
                             e.kill()
 
+                    if e.type == 2:
+                        self.frozen = True
+                        self.image = self.other_images[0]
+                        self.starttime = pygame.time.get_ticks()
+
+
+
                 elif pygame.sprite.collide_rect(self, e) and (self.rect.top < e.rect.bottom):
                     self.rect.top = e.rect.bottom
                     self.y_speed = 0
@@ -84,6 +97,13 @@ class Player(Alive):
                 elif pygame.sprite.collide_rect(self, e) and (self.rect.left > e.rect.left):
                     self.rect.left = e.rect.right
                     self.y_speed = 0
+        else:
+            if self.frozen == True and pygame.time.get_ticks() - self.starttime >= 100:
+                self.frozen = False
+                self.image = self.image_basic
+
+
+
 
 
 
@@ -170,12 +190,17 @@ class Level(Base):
                     x=1400
                     break
 
-
-            if random.randint(1, 5) == 1:
+            coin = random.randint(1, 6)
+            if coin == 1:
                 type = 1
                 self.image_platform_start = self.other_platforms[0]
                 self.image_platform_middle = self.other_platforms[1]
                 self.image_platform_end = self.other_platforms[2]
+            elif coin == 2:
+                type = 2
+                self.image_platform_start = self.other_platforms[3]
+                self.image_platform_middle = self.other_platforms[4]
+                self.image_platform_end = self.other_platforms[5]
             else:
                 type = 0
 
