@@ -46,7 +46,6 @@ class Player(Alive):
         self.left_speed = 0
         self.up_speed = 0
 
-        self.image2 = image2
 
         self.right_speed = 0
         self.left_speed = 0

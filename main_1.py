@@ -26,8 +26,8 @@ for file_name in file_names:
 
 
 Test_Level = Level(BACKGROUND, 100, 200, screen, IMAGES['platformStart'],IMAGES['platformMiddle'],IMAGES['platformEnd'])
-
-Test = Player(IMAGES['testGrafika1'], 120, 80, 2, Test_Level,0,120,80,1,BLACK, IMAGES['_Idle'])
+list_image_animation = [IMAGES['nazwa1'], IMAGES['nazwa1'], IMAGES['nazwa1']]
+Test = Player(IMAGES['testGrafika1'], 120, 80, 2, Test_Level,0,120,80,1,BLACK, list_image_animation)
 
 
 
