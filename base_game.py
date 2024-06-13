@@ -84,7 +84,14 @@ class Environment(Base):
         super().__init__(image, x, y)
 
     def update(self):
-        self.rect.move_ip([-2, 0])
+        if self.rect.bottom == 650:
+            self.rect.move_ip([-2, 0])
+        elif self.rect.bottom == 450:
+            self.rect.move_ip([-3, 0])
+        elif self.rect.bottom == 250:
+            self.rect.move_ip([-4, 0])
+
+
 
 
 
@@ -114,17 +121,17 @@ class Level(Base):
         for e in self.set_of_environment:
             if e.rect.right < 0:
                 e.kill()
-            if e.rect.right > 500:
+            if e.rect.right < 1000:
                 if e.rect.bottom == 650:
-                    e.remove(self.set_of_environment_low)
+                    self.set_of_environment_low.remove(e)
                 elif e.rect.bottom == 450:
-                    e.remove(self.set_of_environment_low)
+                    self.set_of_environment_mid.remove(e)
                 elif e.rect.bottom == 250:
-                    e.remove(self.set_of_environment_low)
+                    self.set_of_environment_hig.remove(e)
 
 
     def add_basic_platform(self):
-        if random.randint(1, 100) == 1 and len(self.set_of_environment) < 40 and (len(self.set_of_environment_low) < 1 or len(self.set_of_environment_mid) < 1 or len(self.set_of_environment_hig) < 1):
+        if random.randint(1, 60) == 1 and len(self.set_of_environment) < 400 and (len(self.set_of_environment_low) < 1 or len(self.set_of_environment_mid) < 1 or len(self.set_of_environment_hig) < 1):
             while True:
                 coin = random.randint(1,3)
                 if coin == 1 and len(self.set_of_environment_low) < 1:
