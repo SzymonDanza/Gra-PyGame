@@ -115,16 +115,23 @@ class BasicPlatform(Environment):
 
 
 class Level(Base):
-    def __init__(self, image, x, y, surface, image_platform_start, image_platform_middle, image_platform_end):
+    def __init__(self, image, x, y, surface, image_platform_start, image_platform_middle, image_platform_end, other_platforms):
         super().__init__(image, x, y)
         self.set_of_environment = pygame.sprite.Group()
         self.set_of_environment_low = pygame.sprite.Group()
         self.set_of_environment_mid = pygame.sprite.Group()
         self.set_of_environment_hig = pygame.sprite.Group()
         self.surface = surface
+
+        self.image_platform_start_basic = image_platform_start
+        self.image_platform_middle_basic = image_platform_middle
+        self.image_platform_end_basic = image_platform_end
+
         self.image_platform_start = image_platform_start
         self.image_platform_middle = image_platform_middle
         self.image_platform_end = image_platform_end
+
+        self.other_platforms = other_platforms
 
 
     def update_level(self):
@@ -164,8 +171,11 @@ class Level(Base):
                     break
 
 
-            if random.randint(1, 2) == 1:
+            if random.randint(1, 20) == 1:
                 type = 1
+                self.image_platform_start = self.other_platforms[1]
+                self.image_platform_middle = self.other_platforms[1]
+                self.image_platform_end = self.other_platforms[1]
             else:
                 type = 0
 
@@ -195,4 +205,6 @@ class Level(Base):
             if y == 250:
                 self.set_of_environment_hig.add(end_platform)
 
-            print(self.set_of_environment_low)
+            self.image_platform_start = self.image_platform_start_basic
+            self.image_platform_middle = self.image_platform_middle_basic
+            self.image_platform_end = self.image_platform_end_basic

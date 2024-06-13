@@ -23,8 +23,8 @@ for file_name in file_names:
 
 
 
-
-Test_Level = Level(BACKGROUND, 100, 200, screen, IMAGES['testGrafika1'],IMAGES['testGrafika1'],IMAGES['testGrafika1'])
+other_platform_list = [IMAGES['kw4'], IMAGES['kw4']]
+Test_Level = Level(BACKGROUND, 100, 200, screen, IMAGES['testGrafika1'],IMAGES['testGrafika1'],IMAGES['testGrafika1'], other_platform_list)
 
 Test = Player(IMAGES['testGrafika1'], 100, 100, 2, Test_Level)
 
