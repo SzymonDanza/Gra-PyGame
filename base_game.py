@@ -44,6 +44,9 @@ class Player(Alive):
         self.image_basic = image
         self.other_images = other_images
 
+        self.jump_boost = False
+        self.jump_boost_amount = 0
+
 
     def move(self,key):
         gravity = 1
@@ -59,7 +62,14 @@ class Player(Alive):
                 else:
                     self.rect.x += 7
             if key[pygame.K_SPACE] and self.on_ground:
-                self.y_speed = -20  # Adjust this value for jump strength
+                if self.jump_boost:
+                    self.y_speed = -30
+                    self.jump_boost_amount -= 1
+                    if self.jump_boost_amount <= 0:
+                        self.jump_boost_amount = 0
+                        self.jump_boost = False
+                else:
+                    self.y_speed = -20 #siła skoku
                 self.on_ground = False
 
         # Apply gravity
@@ -118,6 +128,12 @@ class Player(Alive):
         if pygame.sprite.spritecollideany(self, self.level.set_of_powerups):
             for e in self.level.set_of_powerups:
                 e.kill()
+                if e.type == 1:
+                    self.jump_boost = True
+                    self.jump_boost_amount += 5
+
+                if e.type == 2:
+                    pass
 
 
 
@@ -176,7 +192,7 @@ class Powerup(Environment):
 
 
 class Level(Base):
-    def __init__(self, image, x, y, surface, image_platform_start, image_platform_middle, image_platform_end, other_platforms):
+    def __init__(self, image, x, y, surface, image_platform_start, image_platform_middle, image_platform_end, other_platforms, powerups):
         super().__init__(image, x, y)
         self.set_of_environment = pygame.sprite.Group()
         self.set_of_environment_low = pygame.sprite.Group()
@@ -195,6 +211,7 @@ class Level(Base):
         self.image_platform_end = image_platform_end
 
         self.other_platforms = other_platforms
+        self.powerups = powerups
 
 
 
@@ -301,6 +318,11 @@ class Level(Base):
 
     def add_powerup(self):
        if  random.randint(1, 40) == 1 and len(self.set_of_powerups) < 1:
-            powerup = Powerup(self.image_platform_start, random.randint(100, 1300), -100)
-            self.set_of_powerups.add(powerup)
+           if random.randint(1,2) == 1:
+               powerup = Powerup(self.powerups[0], random.randint(100, 1300), -100, 1)
 
+
+           else:
+               powerup = Powerup(self.powerups[1], random.randint(100, 1300), -100, 2)
+
+           self.set_of_powerups.add(powerup)
