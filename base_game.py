@@ -18,14 +18,29 @@ class Base(pygame.sprite.Sprite):
 
 
 class Alive(Base):
-    def __init__(self, image, x, y, life):
+    def __init__(self, image, x, y, life,frame, width, height,scale,colour):
         super().__init__(image,x,y)
         self.life = life
+        self.frame = frame
+        self.width = width
+        self.height = height
+        self.scale = scale
+        self.colour = colour
+
+
+
+    def get_image(self, frame, width, height, scale, colour):
+        image = pygame.Surface((width, height)).convert_alpha()
+        image.blit(self.image, (0, 0), ((frame * width), 0, width, height))
+        image = pygame.transform.scale(image, (width * scale, height * scale))
+        image.set_colorkey(colour)
+
+        return image
 
 
 class Player(Alive):
-    def __init__(self,image,x,y,life, level):
-        super().__init__(image,x,y,life)
+    def __init__(self,image,x,y,life, level,frame, width, height, scale, colour):
+        super().__init__(image,x,y,life,frame, width, height, scale, colour)
         self.level = level
         self.right_speed = 0
         self.left_speed = 0
@@ -35,6 +50,14 @@ class Player(Alive):
         self.left_speed = 0
         self.y_speed = 0  # Vertical speed
         self.on_ground = False  # To check if the player is on the ground
+        self.animation_list = []
+        self.animation_steps = 10
+        self.last_update = pygame.time.get_ticks()
+        self.animation_cooldown = 75
+        self.frame = frame
+        for x in range(self.animation_steps):
+            self.animation_list.append(self.get_image(x, 120, 80, 1, colour))
+            print(self.animation_list)
 
 
     def move(self,key):
@@ -73,6 +96,15 @@ class Player(Alive):
                 elif pygame.sprite.collide_rect(self, e) and (self.rect.left > e.rect.left):
                     self.rect.left = e.rect.right
                     self.y_speed = 0
+
+        current_time = pygame.time.get_ticks()
+        if current_time - self.last_update >= self.animation_cooldown:
+            self.frame += 1
+            self.last_update = current_time
+            if self.frame >= len(self.animation_list):
+                self.frame = 0
+
+
 
 
 
@@ -132,8 +164,12 @@ class Level(Base):
                 self.set_of_environment_mid.remove(e)
 
 
+
+
     def add_basic_platform(self):
-        if random.randint(1, 60) == 1 and len(self.set_of_environment) < 400 and (len(self.set_of_environment_low) < 1 or len(self.set_of_environment_mid) < 1 or len(self.set_of_environment_hig) < 1):
+        if (random.randint(1, 60) == 1 and len(self.set_of_environment) < 400
+                and (len(self.set_of_environment_low) < 1 or len(self.set_of_environment_mid) < 1
+                     or len(self.set_of_environment_hig) < 1)):
             while True:
                 coin = random.randint(1,3)
                 if coin == 1 and len(self.set_of_environment_low) < 1:

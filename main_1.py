@@ -11,7 +11,7 @@ clock = pygame.time.Clock()
 path = os.path.join(os.getcwd(), 'img')
 file_names = os.listdir(path)
 LIGHTGREEN = pygame.color.THECOLORS['lightgreen']
-
+BLACK = (0,0,0)
 
 BACKGROUND = pygame.image.load(os.path.join(path, 'background.jpg')).convert()
 file_names.remove('background.jpg')
@@ -24,9 +24,10 @@ for file_name in file_names:
 
 
 
-Test_Level = Level(BACKGROUND, 100, 200, screen, IMAGES['testGrafika1'],IMAGES['testGrafika1'],IMAGES['testGrafika1'])
 
-Test = Player(IMAGES['testGrafika1'], 100, 100, 2, Test_Level)
+Test_Level = Level(BACKGROUND, 100, 200, screen, IMAGES['platformStart'],IMAGES['platformMiddle'],IMAGES['platformEnd'])
+
+Test = Player(IMAGES['_Idle'], 100, 100, 2, Test_Level,0,120,80,10,BLACK)
 
 
 
@@ -51,9 +52,7 @@ while window_open:
 
             window_open = False
 
-    Test.draw(screen)
-
-
+    screen.blit(Test.animation_list[Test.frame], (Test.rect.right, Test.rect.bottom))
 
     pygame.display.flip()
     Test_Level.add_basic_platform()
