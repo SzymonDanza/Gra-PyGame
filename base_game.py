@@ -45,7 +45,7 @@ class Player(Alive):
         if key[pygame.K_RIGHT]:
             self.rect.x += 5
         if key[pygame.K_SPACE] and self.on_ground:
-            self.y_speed = -15  # Adjust this value for jump strength
+            self.y_speed = -20  # Adjust this value for jump strength
             self.on_ground = False
 
         # Apply gravity
@@ -111,8 +111,14 @@ class Level(Base):
                 e.kill()
 
     def add_basic_platform(self):
-        if random.randint(1, 10) == 1 and len(self.set_of_environment) < 10:
-            m = BasicPlatform(self.image_platform, random.randint(500, 1300), random.randint(1, 700))
+        if random.randint(1, 50) == 1 and len(self.set_of_environment) < 5:
+            coin = random.randint(1,3)
+            if coin == 1:
+                m = BasicPlatform(self.image_platform, 1400, 650)
+            elif coin == 2:
+                m = BasicPlatform(self.image_platform, 1400, 450)
+            elif coin == 3:
+                m = BasicPlatform(self.image_platform, 1400, 250)
             if not pygame.sprite.spritecollideany(m, self.set_of_environment):
                 self.set_of_environment.add(m)
 
