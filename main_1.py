@@ -60,6 +60,7 @@ while window_open:
 
     pygame.display.flip()
     Test_Level.add_basic_platform()
+    Test_Level.add_powerup()
     Test_Level.update_level()
     clock.tick(60)
 

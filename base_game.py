@@ -115,6 +115,10 @@ class Player(Alive):
 
             self.slip = False
 
+        if pygame.sprite.spritecollideany(self, self.level.set_of_powerups):
+            for e in self.level.set_of_powerups:
+                e.kill()
+
 
 
 
@@ -147,6 +151,30 @@ class BasicPlatform(Environment):
         self.starttime = 0
 
 
+class Powerup(Environment):
+    def __init__(self, image, x, y, type=0):
+        super().__init__(image, x, y)
+        self.type = type
+        self.set_of_environment = pygame.sprite.Group()
+        self.caught = False
+
+    def update(self, group):
+        if not self.caught:
+            self.rect.move_ip([0, 3])
+        else:
+            if self.rect.top < 250:
+                self.rect.move_ip([-4, 0])
+            elif 250 < self.rect.top < 450:
+                self.rect.move_ip([3, 0])
+            else:
+                self.rect.move_ip([-2, 0])
+        self.set_of_environment = group
+        if pygame.sprite.spritecollideany(self, self.set_of_environment):
+            self.caught = True
+
+
+
+
 class Level(Base):
     def __init__(self, image, x, y, surface, image_platform_start, image_platform_middle, image_platform_end, other_platforms):
         super().__init__(image, x, y)
@@ -155,6 +183,7 @@ class Level(Base):
         self.set_of_environment_mid = pygame.sprite.Group()
         self.set_of_environment_hig = pygame.sprite.Group()
         self.set_of_special_platforms = pygame.sprite.Group()
+        self.set_of_powerups = pygame.sprite.Group()
         self.surface = surface
 
         self.image_platform_start_basic = image_platform_start
@@ -168,10 +197,16 @@ class Level(Base):
         self.other_platforms = other_platforms
 
 
+
     def update_level(self):
         self.surface.blit(self.image, (-300, -300))
+
+        self.set_of_powerups.update(self.set_of_environment)
+        self.set_of_powerups.draw(self.surface)
+
         self.set_of_environment.update()
         self.set_of_environment.draw(self.surface)
+
 
         for e in self.set_of_environment:
             if e.rect.right < 0:
@@ -185,6 +220,10 @@ class Level(Base):
                     self.set_of_environment_hig.remove(e)
             if e.rect.left > 500 and e.rect.bottom == 450:
                 self.set_of_environment_mid.remove(e)
+
+        for e in self.set_of_powerups:
+            if e.rect.top > 740 or e.rect.right < 0 or e.rect.right > 1500:
+                e.kill()
 
 
     def add_basic_platform(self):
@@ -204,7 +243,7 @@ class Level(Base):
                     x=1400
                     break
 
-            print(self.set_of_special_platforms)
+
             if len(self.set_of_special_platforms) < 2:
                 coin = random.randint(1, 12)
             else:
@@ -259,3 +298,9 @@ class Level(Base):
             self.image_platform_start = self.image_platform_start_basic
             self.image_platform_middle = self.image_platform_middle_basic
             self.image_platform_end = self.image_platform_end_basic
+
+    def add_powerup(self):
+       if  random.randint(1, 40) == 1 and len(self.set_of_powerups) < 1:
+            powerup = Powerup(self.image_platform_start, random.randint(100, 1300), -100)
+            self.set_of_powerups.add(powerup)
+
