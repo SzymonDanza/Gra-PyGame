@@ -116,7 +116,7 @@ class Level(Base):
                 e.kill()
 
     def add_basic_platform(self):
-        if random.randint(1, 100) == 1 and len(self.set_of_environment) < 40:
+        if random.randint(1, 100) == 1 and len(self.set_of_environment) < 40 and (len(self.set_of_environment_low) < 2 or len(self.set_of_environment_mid) < 2 or len(self.set_of_environment_hig) < 2):
             while True:
                 coin = random.randint(1,3)
                 if coin == 1 and len(self.set_of_environment_low) < 2:
@@ -142,7 +142,6 @@ class Level(Base):
 
             num_middle_segments = random.randint(1, 2)
             middle_collection = []
-            print(num_middle_segments)
             for i in range(num_middle_segments):
                     middle_collection.append(BasicPlatform(self.image_platform_middle,
                                                     1400 + (i+1) * self.image_platform_middle.get_width(), y))
@@ -155,5 +154,7 @@ class Level(Base):
             for e in middle_collection:
                 self.set_of_environment.add(e)
             self.set_of_environment.add(end_platform)
+
+            print(self.set_of_environment_low)
 
 
