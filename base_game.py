@@ -64,6 +64,17 @@ class Player(Alive):
                     self.rect.bottom = e.rect.top
                     self.y_speed = 0
                     self.on_ground = True
+                    if e.type == 1:
+                        if not e.flag:
+                            e.starttime = pygame.time.get_ticks()
+                            ychange = -6
+                            e.flag = True
+
+                        if e.flag == True and pygame.time.get_ticks() - e.starttime >= 500:
+                            ychange = 6
+                            e.flag = False
+                            e.kill()
+
                 elif pygame.sprite.collide_rect(self, e) and (self.rect.top < e.rect.bottom):
                     self.rect.top = e.rect.bottom
                     self.y_speed = 0
@@ -96,8 +107,11 @@ class Environment(Base):
 
 
 class BasicPlatform(Environment):
-    def __init__(self, image, x, y):
+    def __init__(self, image, x, y, type=0):
         super().__init__(image, x, y)
+        self.type = type
+        self.flag = False
+        self.starttime = 0
 
 
 class Level(Base):
@@ -150,8 +164,12 @@ class Level(Base):
                     break
 
 
+            if random.randint(1, 2) == 1:
+                type = 1
+            else:
+                type = 0
 
-            start_platform = BasicPlatform(self.image_platform_start, x, y)
+            start_platform = BasicPlatform(self.image_platform_start, x, y, type)
 
 
 
@@ -159,11 +177,11 @@ class Level(Base):
             middle_collection = []
             for i in range(num_middle_segments):
                     middle_collection.append(BasicPlatform(self.image_platform_middle,
-                                                    x + (i+1) * self.image_platform_middle.get_width(), y))
+                                                    x + (i+1) * self.image_platform_middle.get_width(), y, type))
 
 
             end_platform = BasicPlatform(self.image_platform_end, x + (
-                        num_middle_segments + 1 ) * self.image_platform_middle.get_width(), y)
+                        num_middle_segments + 1 ) * self.image_platform_middle.get_width(), y, type)
 
             self.set_of_environment.add(start_platform)
             for e in middle_collection:
