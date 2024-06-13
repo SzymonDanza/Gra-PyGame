@@ -56,8 +56,11 @@ class Player(Alive):
         self.animation_cooldown = 75
         self.frame = frame
         for x in range(self.animation_steps):
-            self.animation_list.append(self.get_image(x, 120, 80, 1, colour))
+            self.animation_list.append(self.get_image(x, width, height, scale, colour))
             print(self.animation_list)
+
+    def draw(self,surface):
+        surface.blit(self.animation_list[self.frame], (self.rect.right, self.rect.top))
 
 
     def move(self,key):

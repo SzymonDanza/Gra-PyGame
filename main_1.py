@@ -27,7 +27,7 @@ for file_name in file_names:
 
 Test_Level = Level(BACKGROUND, 100, 200, screen, IMAGES['platformStart'],IMAGES['platformMiddle'],IMAGES['platformEnd'])
 
-Test = Player(IMAGES['_Idle'], 100, 100, 2, Test_Level,0,120,80,10,BLACK)
+Test = Player(IMAGES['_Idle'], 100, 100, 2, Test_Level,0,120,80,2,BLACK)
 
 
 
@@ -52,7 +52,7 @@ while window_open:
 
             window_open = False
 
-    screen.blit(Test.animation_list[Test.frame], (Test.rect.right, Test.rect.bottom))
+    Test.draw(screen)
 
     pygame.display.flip()
     Test_Level.add_basic_platform()
