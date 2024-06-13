@@ -23,13 +23,14 @@ for file_name in file_names:
 
 
 
-other_platform_list = [IMAGES['kw4'], IMAGES['kw4'], IMAGES['kw4'],
-                       IMAGES['kw5'], IMAGES['kw5'], IMAGES['kw5'],
-                       IMAGES['kw3'], IMAGES['kw3'], IMAGES['kw3']]
-powerups_list = [IMAGES['kw1'], IMAGES['kw5']]
-Test_Level = Level(BACKGROUND, 100, 200, screen, IMAGES['testGrafika1'],IMAGES['testGrafika1'],IMAGES['testGrafika1'], other_platform_list, powerups_list)
+other_platform_list = [IMAGES['vanishStart'], IMAGES['vanishMiddle'], IMAGES['vanishEnd'],
+                       IMAGES['mrozStart'], IMAGES['mrozMiddle'], IMAGES['mrozEnd'],
+                       IMAGES['slimeStart'], IMAGES['slimeMiddle'], IMAGES['slimeEnd']]
+powerups_list = [IMAGES['powerUp'], IMAGES['kw5']]
+Test_Level = Level(BACKGROUND, 100, 200, screen, IMAGES['platformStart'],IMAGES['platformMiddle'],IMAGES['platformEnd'], other_platform_list, powerups_list)
 
-other_images_player = [IMAGES['kw5']]
+
+other_images_player = [IMAGES['kwmroz']]
 Test = Player(IMAGES['kw1'], 100, 100, 2, Test_Level, other_images_player)
 
 
