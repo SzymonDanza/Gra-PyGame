@@ -39,7 +39,7 @@ class Alive(Base):
 
 
 class Player(Alive):
-    def __init__(self,image,x,y,life, level,frame, width, height, scale, colour, image2):
+    def __init__(self,image,x,y,life, level,frame, width, height, scale, colour, image_list2):
         super().__init__(image,x,y,life,frame, width, height, scale, colour)
         self.level = level
         self.right_speed = 0
@@ -60,7 +60,7 @@ class Player(Alive):
 
 
 
-        self.animation_list = [image2, image, image2]
+        self.animation_list = image_list2
         self.frame_animation = self.animation_list[0]
 
     def draw(self,surface):
