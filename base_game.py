@@ -154,6 +154,7 @@ class Level(Base):
         self.set_of_environment_low = pygame.sprite.Group()
         self.set_of_environment_mid = pygame.sprite.Group()
         self.set_of_environment_hig = pygame.sprite.Group()
+        self.set_of_special_platforms = pygame.sprite.Group()
         self.surface = surface
 
         self.image_platform_start_basic = image_platform_start
@@ -187,7 +188,7 @@ class Level(Base):
 
 
     def add_basic_platform(self):
-        if random.randint(1, 60) == 1 and len(self.set_of_environment) < 400 and (len(self.set_of_environment_low) < 1 or len(self.set_of_environment_mid) < 1 or len(self.set_of_environment_hig) < 1):
+        if random.randint(1, 40) == 1 and len(self.set_of_environment) < 400 and (len(self.set_of_environment_low) < 1 or len(self.set_of_environment_mid) < 1 or len(self.set_of_environment_hig) < 1):
             while True:
                 coin = random.randint(1,3)
                 if coin == 1 and len(self.set_of_environment_low) < 1:
@@ -203,18 +204,23 @@ class Level(Base):
                     x=1400
                     break
 
-            coin = random.randint(1, 7)
-            if coin == 1:
+            print(self.set_of_special_platforms)
+            if len(self.set_of_special_platforms) < 2:
+                coin = random.randint(1, 12)
+            else:
+                coin = 12
+
+            if coin <= 3:
                 type = 1
                 self.image_platform_start = self.other_platforms[0]
                 self.image_platform_middle = self.other_platforms[1]
                 self.image_platform_end = self.other_platforms[2]
-            elif coin == 2:
+            elif 3 < coin <= 4:
                 type = 2
                 self.image_platform_start = self.other_platforms[3]
                 self.image_platform_middle = self.other_platforms[4]
                 self.image_platform_end = self.other_platforms[5]
-            elif coin == 3:
+            elif 4 < coin <= 6:
                 type = 3
                 self.image_platform_start = self.other_platforms[6]
                 self.image_platform_middle = self.other_platforms[7]
@@ -223,6 +229,8 @@ class Level(Base):
                 type = 0
 
             start_platform = BasicPlatform(self.image_platform_start, x, y, type)
+            if coin <= 6:
+                self.set_of_special_platforms.add(start_platform)
 
 
 
