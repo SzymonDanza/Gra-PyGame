@@ -41,9 +41,9 @@ class Player(Alive):
         gravity = 1
 
         if key[pygame.K_LEFT]:
-            self.rect.x -= 5
+            self.rect.x -= 7
         if key[pygame.K_RIGHT]:
-            self.rect.x += 5
+            self.rect.x += 7
         if key[pygame.K_SPACE] and self.on_ground:
             self.y_speed = -20  # Adjust this value for jump strength
             self.on_ground = False
@@ -87,7 +87,7 @@ class Environment(Base):
         if self.rect.bottom == 650:
             self.rect.move_ip([-2, 0])
         elif self.rect.bottom == 450:
-            self.rect.move_ip([-3, 0])
+            self.rect.move_ip([3, 0])
         elif self.rect.bottom == 250:
             self.rect.move_ip([-4, 0])
 
@@ -121,13 +121,15 @@ class Level(Base):
         for e in self.set_of_environment:
             if e.rect.right < 0:
                 e.kill()
+            if e.rect.right > 1500 and e.rect.bottom == 450:
+                e.kill()
             if e.rect.right < 1000:
                 if e.rect.bottom == 650:
                     self.set_of_environment_low.remove(e)
-                elif e.rect.bottom == 450:
-                    self.set_of_environment_mid.remove(e)
                 elif e.rect.bottom == 250:
                     self.set_of_environment_hig.remove(e)
+            if e.rect.left > 500 and e.rect.bottom == 450:
+                self.set_of_environment_mid.remove(e)
 
 
     def add_basic_platform(self):
@@ -136,17 +138,20 @@ class Level(Base):
                 coin = random.randint(1,3)
                 if coin == 1 and len(self.set_of_environment_low) < 1:
                     y=650
+                    x=1400
                     break
                 elif coin == 2 and len(self.set_of_environment_mid) < 1:
                     y=450
+                    x=0
                     break
                 elif coin == 3 and len(self.set_of_environment_hig) < 1:
                     y=250
+                    x=1400
                     break
 
 
 
-            start_platform = BasicPlatform(self.image_platform_start, 1400, y)
+            start_platform = BasicPlatform(self.image_platform_start, x, y)
 
 
 
@@ -154,10 +159,10 @@ class Level(Base):
             middle_collection = []
             for i in range(num_middle_segments):
                     middle_collection.append(BasicPlatform(self.image_platform_middle,
-                                                    1400 + (i+1) * self.image_platform_middle.get_width(), y))
+                                                    x + (i+1) * self.image_platform_middle.get_width(), y))
 
 
-            end_platform = BasicPlatform(self.image_platform_end, 1400 + (
+            end_platform = BasicPlatform(self.image_platform_end, x + (
                         num_middle_segments + 1 ) * self.image_platform_middle.get_width(), y)
 
             self.set_of_environment.add(start_platform)
@@ -168,7 +173,7 @@ class Level(Base):
             if y == 650:
                 self.set_of_environment_low.add(end_platform)
             if y == 450:
-                self.set_of_environment_mid.add(end_platform)
+                self.set_of_environment_mid.add(start_platform)
             if y == 250:
                 self.set_of_environment_hig.add(end_platform)
 
