@@ -127,19 +127,20 @@ class Level(Base):
             start_platform = BasicPlatform(self.image_platform_start, 1400, y)
 
 
-            num_middle_segments = random.randint(1, 3)
+            num_middle_segments = random.randint(1, 2)
+            middle_collection = []
             print(num_middle_segments)
             for i in range(num_middle_segments):
-
-                middle_platform = BasicPlatform(self.image_platform_middle,
-                                                    1400 + i * self.image_platform_middle.get_width(), y)
+                    middle_collection.append(BasicPlatform(self.image_platform_middle,
+                                                    1400 + (i+1) * self.image_platform_middle.get_width(), y))
 
 
             end_platform = BasicPlatform(self.image_platform_end, 1400 + (
-                        num_middle_segments ) * self.image_platform_middle.get_width(), y)
+                        num_middle_segments + 1 ) * self.image_platform_middle.get_width(), y)
 
             self.set_of_environment.add(start_platform)
-            self.set_of_environment.add(middle_platform)
+            for e in middle_collection:
+                self.set_of_environment.add(e)
             self.set_of_environment.add(end_platform)
 
 
