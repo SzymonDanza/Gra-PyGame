@@ -200,19 +200,19 @@ class Player(Alive):
 
         if pygame.sprite.spritecollideany(self, self.level.set_of_enemies):
             for e in self.level.set_of_enemies:
-                print(e.type)
                 if (pygame.sprite.collide_rect(self, e) and (self.rect.bottom-40 < e.rect.top) and e.type == 1) or (pygame.sprite.collide_rect(self, e) and (self.rect.bottom > e.rect.top+50) and e.type == 2):
                     e.kill()
                     self.points += 5
                 elif (pygame.sprite.collide_rect(self, e) and (self.rect.bottom > e.rect.top) and e.type == 1) or (True and e.type == 2):
-                    self.rect.y += 10
-                    if self.rect.left < e.rect.left and type == 1:
+
+                    ##self.rect.y += 10
+                    if self.rect.left < e.rect.left and e.type == 1:
                         self.rect.x -= 200
-                    if self.rect.right > e.rect.right and type == 1:
+                    if self.rect.right > e.rect.right and e.type == 1:
                         self.rect.x += 200
-                    if self.rect.left < e.rect.left and type == 2:
+                    if self.rect.left < e.rect.left and e.type == 2:
                         self.rect.x -= 100
-                    if self.rect.right > e.rect.right and type == 2:
+                    if self.rect.right > e.rect.right and e.type == 2:
                         self.rect.x += 100
                     self.on_ground = False
 
@@ -336,13 +336,14 @@ class Enemy2(Environment):
         self.animation_list = animation_list
         self.frame = 0
 
-    def animate(self):
+    def animate(self, surface):
         if pygame.time.get_ticks() - self.animation_cooldown >= 200:
             self.animation_cooldown = pygame.time.get_ticks()
             self.image = self.animation_list[self.frame]
             self.frame += 1
             if self.frame >= len(self.animation_list):
                 self.frame = 0
+        surface.blit(self.image, self.rect)
 
 
 
@@ -397,7 +398,7 @@ class Level(Base):
         self.set_of_environment.draw(self.surface)
 
         for e in self.set_of_enemies:
-            e.animate()
+            e.animate(self.surface)
         self.set_of_enemies.update()
         self.set_of_enemies.draw(self.surface)
 
@@ -525,6 +526,7 @@ class Level(Base):
                         break
 
                 self.set_of_enemies.add(new_enemy)
+
 
 
 
