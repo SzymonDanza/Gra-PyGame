@@ -73,7 +73,7 @@ class Player(Alive):
         surface.blit(self.image,self.rect)
 
     def animate(self):
-        if pygame.time.get_ticks() - self.animation_cooldown >= 200:
+        if pygame.time.get_ticks() - self.animation_cooldown >= 200 and not self.frozen:
             self.animation_cooldown = pygame.time.get_ticks()
             self.image = self.animation_list[self.frame]
             self.frame += 1

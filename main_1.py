@@ -20,6 +20,7 @@ DARKBLUE = pygame.color.THECOLORS['darkblue']
 
 
 BACKGROUND = pygame.image.load(os.path.join(path, 'tlo2.png')).convert()
+
 file_names.remove('tlo2.png')
 
 IMAGES = {}
@@ -34,25 +35,25 @@ animation_list = [IMAGES['kw1'],IMAGES['kw2'],IMAGES['kw3']]
 other_platform_list = [IMAGES['vanishStart'], IMAGES['vanishMiddle'], IMAGES['vanishEnd'],
                        IMAGES['mrozStart'], IMAGES['mrozMiddle'], IMAGES['mrozEnd'],
                        IMAGES['slimeStart'], IMAGES['slimeMiddle'], IMAGES['slimeEnd']]
-powerups_list = [IMAGES['powerUp'], IMAGES['powerUp2']]
+powerups_list = [IMAGES['powerUp1'], IMAGES['powerUp2']]
 Test_Level = Level(BACKGROUND, 0, 0, screen, IMAGES['platformStart'],IMAGES['platformMiddle'],IMAGES['platformEnd'], other_platform_list, powerups_list, difficulty)
 animation_list = [IMAGES['kw1'], IMAGES['kw2'], IMAGES['kw3']]
 
 other_images_player = [IMAGES['kwmroz']]
 Test = Player(IMAGES['kw1'], 100, 100, 2, Test_Level, other_images_player,animation_list)
 
-start_button = Button(IMAGES['powerUp'], 533, 45, "START", LIGHTGREEN, 90, "Arial", YELLOW, 300, 150)
-quit_button = Button(IMAGES['powerUp'], 533, 245, "QUIT", LIGHTGREEN, 90, "Arial", YELLOW, 300, 150)
-restart_button = Button(IMAGES['powerUp'], 533, 445, "RESTART", LIGHTGREEN, 60, "Arial", YELLOW, 300, 150)
-difficulty_button = Button(IMAGES['powerUp'], 533, 445, "DIFFICULTY", LIGHTGREEN, 50, "Arial", YELLOW, 300, 150)
+start_button = Button(IMAGES['powerUp1'], 533, 45, "START", LIGHTGREEN, 90, "Arial", YELLOW, 300, 150)
+quit_button = Button(IMAGES['powerUp1'], 533, 245, "QUIT", LIGHTGREEN, 90, "Arial", YELLOW, 300, 150)
+restart_button = Button(IMAGES['powerUp1'], 533, 445, "RESTART", LIGHTGREEN, 60, "Arial", YELLOW, 300, 150)
+difficulty_button = Button(IMAGES['powerUp1'], 533, 445, "DIFFICULTY", LIGHTGREEN, 50, "Arial", YELLOW, 300, 150)
 
-easy_button = Button(IMAGES['powerUp'], 533, 45, "EASY", LIGHTGREEN, 90, "Arial", YELLOW, 300, 150)
-med_button = Button(IMAGES['powerUp'], 533, 245, "MEDIUM", LIGHTGREEN, 90, "Arial", YELLOW, 300, 150)
-diff_button = Button(IMAGES['powerUp'], 533, 445, "HARD", LIGHTGREEN, 90, "Arial", YELLOW, 300, 150)
-quit_dif_button = Button(IMAGES['powerUp'], 533, 645, "DONE", LIGHTGREEN, 90, "Arial", YELLOW, 300, 150)
+easy_button = Button(IMAGES['powerUp1'], 533, 45, "EASY", LIGHTGREEN, 90, "Arial", YELLOW, 300, 150)
+med_button = Button(IMAGES['powerUp1'], 533, 245, "MEDIUM", LIGHTGREEN, 90, "Arial", YELLOW, 300, 150)
+diff_button = Button(IMAGES['powerUp1'], 533, 445, "HARD", LIGHTGREEN, 90, "Arial", YELLOW, 300, 150)
+quit_dif_button = Button(IMAGES['powerUp1'], 533, 645, "DONE", LIGHTGREEN, 90, "Arial", YELLOW, 300, 150)
 
-won_text = Text(IMAGES['powerUp'], 100, 100, ": D",DARKRED , 50, "Arial")
-lost_text = Text(IMAGES['powerUp'], 100, 100, ": C", DARKRED, 50, "Arial")
+won_text = Text(IMAGES['powerUp1'], 100, 100, ": D",DARKRED , 50, "Arial")
+lost_text = Text(IMAGES['powerUp1'], 100, 100, ": C", DARKRED, 50, "Arial")
 
 
 
