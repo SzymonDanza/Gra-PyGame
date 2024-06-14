@@ -137,7 +137,7 @@ if game_lost:
     lost_text.update_text()
     lost_text.draw_text(screen)
     pygame.display.update()
-    pygame.time.delay(5000)
+    pygame.time.delay(2000)
 
 if game_won:
     pygame.time.delay(500)
@@ -145,6 +145,6 @@ if game_won:
     won_text.update_text()
     won_text.draw_text(screen)
     pygame.display.update()
-    pygame.time.delay(5000)
+    pygame.time.delay(2000)
 pygame.quit()
 

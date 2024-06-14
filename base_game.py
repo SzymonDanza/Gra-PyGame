@@ -4,6 +4,9 @@ import random
 import pygame
 
 YELLOW = pygame.color.THECOLORS['yellow']
+LIGHTGREEN = pygame.color.THECOLORS['lightgreen']
+DARKRED = pygame.color.THECOLORS['darkred']
+DARKBLUE = pygame.color.THECOLORS['darkblue']
 
 
 class Base(pygame.sprite.Sprite):
@@ -35,11 +38,11 @@ class Player(Alive):
         self.basic_x = x
         self.basic_y = y
         self.points = 0
-        self.points_text = Text(image, x+10, y+10, "0", YELLOW, 50, "Arial")
+        self.points_text = Text(image, x+10, y+10, "0", DARKBLUE, 50, "Arial")
         self.last_points_loss = pygame.time.get_ticks() + 10000
 
         self.boost_one_text = Text(image, x+100, y+10, "0", YELLOW, 50, "Arial")
-        self.boost_two_text = Text(image, x+200, y+10, "0", YELLOW, 50, "Arial")
+        self.boost_two_text = Text(image, x+200, y+10, "0", LIGHTGREEN, 50, "Arial")
 
         self.right_speed = 0
         self.left_speed = 0
@@ -188,6 +191,10 @@ class Player(Alive):
         self.last_points_loss = pygame.time.get_ticks() + 10000
 
     def show_points(self):
+        if self.points < 0:
+            self.points_text.text_color = DARKRED
+        if self.points_text.text_color == DARKRED and self.points > 0:
+            self.points_text.text_color = DARKBLUE
         self.points_text.text = str(self.points)
         self.points_text.update_text()
 
