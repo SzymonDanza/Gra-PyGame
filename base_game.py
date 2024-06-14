@@ -38,6 +38,9 @@ class Player(Alive):
         self.points_text = Text(image, x+10, y+10, "0", YELLOW, 50, "Arial")
         self.last_points_loss = pygame.time.get_ticks() + 10000
 
+        self.boost_one_text = Text(image, x+100, y+10, "0", YELLOW, 50, "Arial")
+        self.boost_two_text = Text(image, x+200, y+10, "0", YELLOW, 50, "Arial")
+
         self.right_speed = 0
         self.left_speed = 0
         self.y_speed = 0  # Vertical speed
@@ -182,10 +185,17 @@ class Player(Alive):
         self.rect.bottom = self.basic_y
 
         self.points = 0
+        self.last_points_loss = pygame.time.get_ticks() + 10000
 
     def show_points(self):
         self.points_text.text = str(self.points)
         self.points_text.update_text()
+
+        self.boost_one_text.text = str(self.jump_boost_amount)
+        self.boost_one_text.update_text()
+
+        self.boost_two_text.text = str(self.immunity_amount)
+        self.boost_two_text.update_text()
 
 
 

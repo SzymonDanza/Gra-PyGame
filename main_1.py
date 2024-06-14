@@ -1,6 +1,6 @@
 import  pygame,os,random
 
-from base_game import Alive, Player, Level, BasicPlatform, Button
+from base_game import Alive, Player, Level, BasicPlatform, Button, Text
 
 pygame.init()
 
@@ -13,6 +13,8 @@ file_names = os.listdir(path)
 
 YELLOW = pygame.color.THECOLORS['yellow']
 LIGHTGREEN = pygame.color.THECOLORS['lightgreen']
+DARKRED = pygame.color.THECOLORS['darkred']
+
 
 
 BACKGROUND = pygame.image.load(os.path.join(path, 'background.jpg')).convert()
@@ -39,8 +41,8 @@ start_button = Button(IMAGES['powerUp'], 533, 45, "START", LIGHTGREEN, 90, "Aria
 quit_button = Button(IMAGES['powerUp'], 533, 245, "QUIT", LIGHTGREEN, 90, "Arial", YELLOW, 300, 150)
 restart_button = Button(IMAGES['powerUp'], 533, 445, "RESTART", LIGHTGREEN, 60, "Arial", YELLOW, 300, 150)
 
-
-
+won_text = Text(IMAGES['powerUp'], 100, 100, ": D",DARKRED , 50, "Arial")
+lost_text = Text(IMAGES['powerUp'], 100, 100, ": C", DARKRED, 50, "Arial")
 
 
 
@@ -51,6 +53,9 @@ restart_button = Button(IMAGES['powerUp'], 533, 445, "RESTART", LIGHTGREEN, 60, 
 window_open = True
 active_game = False
 paused_game = False
+
+game_lost = False
+game_won = False
 
 
 while window_open:
@@ -77,7 +82,7 @@ while window_open:
             if quit_button.rect.collidepoint(pygame.mouse.get_pos()):
                 window_open = False
                 pygame.time.delay(200)
-            if restart_button.rect.collidepoint(pygame.mouse.get_pos()):
+            if restart_button.rect.collidepoint(pygame.mouse.get_pos()) and paused_game:
                 Test_Level.restart_level()
                 Test.restart_player()
                 active_game = True
@@ -92,12 +97,28 @@ while window_open:
         Test.draw(screen)
         Test.show_points()
         Test.points_text.draw_text(screen)
+        if Test.jump_boost:
+            Test.boost_one_text.draw_text(screen)
+        if Test.immunity:
+            Test.boost_two_text.draw_text(screen)
+
+        if Test.points >= 100:
+            game_won = True
+            window_open = False
+        if Test.points < -20:
+            game_lost = True
+            window_open = False
 
     else:
-        start_button.draw_button(screen)
-        quit_button.draw_button(screen)
-        if paused_game:
-            restart_button.draw_button(screen)
+        if not paused_game:
+            screen.fill(DARKRED)
+            start_button.draw_button(screen)
+            quit_button.draw_button(screen)
+        else:
+            start_button.draw_text(screen)
+            quit_button.draw_text(screen)
+            restart_button.update_text()
+            restart_button.draw_text(screen)
 
 
 
@@ -110,5 +131,20 @@ while window_open:
     pygame.display.flip()
     clock.tick(60)
 
+if game_lost:
+    pygame.time.delay(500)
+    screen.fill(YELLOW)
+    lost_text.update_text()
+    lost_text.draw_text(screen)
+    pygame.display.update()
+    pygame.time.delay(5000)
 
+if game_won:
+    pygame.time.delay(500)
+    screen.fill(LIGHTGREEN)
+    won_text.update_text()
+    won_text.draw_text(screen)
+    pygame.display.update()
+    pygame.time.delay(5000)
 pygame.quit()
+
