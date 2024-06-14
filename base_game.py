@@ -206,10 +206,14 @@ class Player(Alive):
                     self.points += 5
                 elif (pygame.sprite.collide_rect(self, e) and (self.rect.bottom > e.rect.top) and e.type == 1) or (True and e.type == 2):
                     self.rect.y += 10
-                    if self.rect.left < e.rect.left:
+                    if self.rect.left < e.rect.left and type == 1:
                         self.rect.x -= 200
-                    if self.rect.right > e.rect.right:
+                    if self.rect.right > e.rect.right and type == 1:
                         self.rect.x += 200
+                    if self.rect.left < e.rect.left and type == 2:
+                        self.rect.x -= 100
+                    if self.rect.right > e.rect.right and type == 2:
+                        self.rect.x += 100
                     self.on_ground = False
 
 
@@ -320,7 +324,7 @@ class Powerup(Environment):
             self.caught = True
 
 class Enemy2(Environment):
-    def __init__(self, image, x, y, difficulty, type=0):
+    def __init__(self, image, x, y, difficulty,animation_list, type=0 ):
         if difficulty == 1:
             super().__init__(image, x, y, 2)
         elif difficulty == 2:
@@ -328,7 +332,17 @@ class Enemy2(Environment):
         elif difficulty == 3:
             super().__init__(image, x, y, 6)
         self.type = type
+        self.animation_cooldown = 0
+        self.animation_list = animation_list
+        self.frame = 0
 
+    def animate(self):
+        if pygame.time.get_ticks() - self.animation_cooldown >= 200:
+            self.animation_cooldown = pygame.time.get_ticks()
+            self.image = self.animation_list[self.frame]
+            self.frame += 1
+            if self.frame >= len(self.animation_list):
+                self.frame = 0
 
 
 
@@ -337,7 +351,7 @@ class Enemy2(Environment):
 
 
 class Level(Base):
-    def __init__(self, image, x, y, surface, image_platform_start, image_platform_middle, image_platform_end, other_platforms, powerups, difficulty, images_for_enemy):
+    def __init__(self, image, x, y, surface, image_platform_start, image_platform_middle, image_platform_end, other_platforms, powerups, difficulty, images_for_enemy, animations_for_enemy):
         super().__init__(image, x, y)
         self.set_of_environment = pygame.sprite.Group()
         self.set_of_environment_low = pygame.sprite.Group()
@@ -357,6 +371,7 @@ class Level(Base):
         self.image_platform_end = image_platform_end
 
         self.images_for_enemy = images_for_enemy
+        self.animations_for_enemy = animations_for_enemy
 
         self.other_platforms = other_platforms
         self.powerups = powerups
@@ -383,6 +398,8 @@ class Level(Base):
 
         self.set_of_enemies.update()
         self.set_of_enemies.draw(self.surface)
+        for e in self.set_of_enemies:
+            e.animate()
 
 
         for e in self.set_of_environment:
@@ -499,14 +516,15 @@ class Level(Base):
                 else:
                     type = 2
                 for e in middle_collection:
-                    new_enemy = Enemy2(self.images_for_enemy[type - 1], e.rect.right, y+(e.rect.top - e.rect.bottom), self.difficulty, type)
+                    new_enemy = Enemy2(self.images_for_enemy[type - 1], e.rect.right, y+(e.rect.top - e.rect.bottom), self.difficulty, self.animations_for_enemy[type - 1], type)
                     break
                 for e in middle_collection:
                     if random.randint(1,len(middle_collection)) == 1:
-                        new_enemy = Enemy2(self.images_for_enemy[type - 1], e.rect.right, y+(e.rect.top - e.rect.bottom), self.difficulty, type)
+                        new_enemy = Enemy2(self.images_for_enemy[type - 1], e.rect.right, y+(e.rect.top - e.rect.bottom), self.difficulty, self.animations_for_enemy[type - 1], type)
                         break
 
                 self.set_of_enemies.add(new_enemy)
+
 
 
     def add_powerup(self):
