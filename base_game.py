@@ -36,6 +36,7 @@ class Player(Alive):
         self.basic_y = y
         self.points = 0
         self.points_text = Text(image, x+10, y+10, "0", YELLOW, 50, "Arial")
+        self.last_points_loss = pygame.time.get_ticks() + 10000
 
         self.right_speed = 0
         self.left_speed = 0
@@ -54,6 +55,8 @@ class Player(Alive):
         self.jump_boost_amount = 0
         self.immunity = False
         self.immunity_amount = 0
+
+
 
 
     def move(self,key):
@@ -125,6 +128,8 @@ class Player(Alive):
                         e.used_for_points = True
                         for h in e.homies:
                             h.used_for_points = True
+                            if h in self.level.set_of_special_platforms:
+                                self.points += 1
 
 
 
@@ -145,6 +150,7 @@ class Player(Alive):
             self.slip = False
 
         if pygame.sprite.spritecollideany(self, self.level.set_of_powerups):
+            self.points += 5
             for e in self.level.set_of_powerups:
                 e.kill()
                 if e.type == 1:
@@ -154,6 +160,12 @@ class Player(Alive):
                 if e.type == 2:
                     self.immunity = True
                     self.immunity_amount += 7
+
+        if self.rect.bottom >= 740:
+            if pygame.time.get_ticks() - self.last_points_loss >= 1000:
+                self.last_points_loss = pygame.time.get_ticks()
+                self.points -= 10
+
 
     def restart_player(self):
         self.immunity_amount = 0
