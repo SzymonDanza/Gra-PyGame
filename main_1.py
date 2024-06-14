@@ -1,6 +1,6 @@
 import  pygame,os,random
 
-from base_game import Alive, Player, Level, BasicPlatform
+from base_game import Alive, Player, Level, BasicPlatform, Button
 
 pygame.init()
 
@@ -10,6 +10,8 @@ clock = pygame.time.Clock()
 
 path = os.path.join(os.getcwd(), 'img')
 file_names = os.listdir(path)
+
+YELLOW = pygame.color.THECOLORS['yellow']
 LIGHTGREEN = pygame.color.THECOLORS['lightgreen']
 
 
@@ -33,6 +35,9 @@ Test_Level = Level(BACKGROUND, 100, 200, screen, IMAGES['platformStart'],IMAGES[
 other_images_player = [IMAGES['kwmroz']]
 Test = Player(IMAGES['kw1'], 100, 100, 2, Test_Level, other_images_player)
 
+start_button = Button(IMAGES['powerUp'], 533, 45, "START", LIGHTGREEN, 90, "Arial", YELLOW, 300, 150)
+quit_button = Button(IMAGES['powerUp'], 533, 245, "QUIT", LIGHTGREEN, 90, "Arial", YELLOW, 300, 150)
+restart_button = Button(IMAGES['powerUp'], 533, 445, "RESTART", LIGHTGREEN, 60, "Arial", YELLOW, 300, 150)
 
 
 
@@ -44,26 +49,65 @@ Test = Player(IMAGES['kw1'], 100, 100, 2, Test_Level, other_images_player)
 #pętla gry
 
 window_open = True
+active_game = False
+paused_game = False
+
+
 while window_open:
-    Test.move(pygame.key.get_pressed())
+    ##Test.move(pygame.key.get_pressed())
 
 
     for event in pygame.event.get():
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
-                window_open = False
+                if not paused_game:
+                    active_game = False
+                    paused_game = True
+                elif paused_game:
+                    active_game = True
+                    paused_game = False
         if event.type == pygame.QUIT:
 
             window_open = False
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if start_button.rect.collidepoint(pygame.mouse.get_pos()):
+                active_game = True
+                paused_game = False
+                pygame.time.delay(200)
+            if quit_button.rect.collidepoint(pygame.mouse.get_pos()):
+                window_open = False
+                pygame.time.delay(200)
+            if restart_button.rect.collidepoint(pygame.mouse.get_pos()):
+                Test_Level.restart_level()
+                Test.restart_player()
+                active_game = True
+                paused_game = False
 
-    Test.draw(screen)
+
+    if active_game:
+        Test_Level.add_basic_platform()
+        Test_Level.add_powerup()
+        Test_Level.update_level()
+        Test.move(pygame.key.get_pressed())
+        Test.draw(screen)
+        Test.show_points()
+        Test.points_text.draw_text(screen)
+
+    else:
+        start_button.draw_button(screen)
+        quit_button.draw_button(screen)
+        if paused_game:
+            restart_button.draw_button(screen)
 
 
+
+
+    ##pygame.display.flip()
+    ##Test_Level.add_basic_platform()
+    ##Test_Level.add_powerup()
+    ##Test_Level.update_level()
 
     pygame.display.flip()
-    Test_Level.add_basic_platform()
-    Test_Level.add_powerup()
-    Test_Level.update_level()
     clock.tick(60)
 
 

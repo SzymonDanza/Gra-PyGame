@@ -3,6 +3,7 @@ import random
 
 import pygame
 
+YELLOW = pygame.color.THECOLORS['yellow']
 
 
 class Base(pygame.sprite.Sprite):
@@ -30,6 +31,11 @@ class Player(Alive):
         self.right_speed = 0
         self.left_speed = 0
         self.up_speed = 0
+
+        self.basic_x = x
+        self.basic_y = y
+        self.points = 0
+        self.points_text = Text(image, x+10, y+10, "0", YELLOW, 50, "Arial")
 
         self.right_speed = 0
         self.left_speed = 0
@@ -114,6 +120,10 @@ class Player(Alive):
                     if e.type == 3 and not self.immunity:
                         self.slip = True
 
+                    if not e.used_for_points:
+                        self.points += 1
+                        e.used_for_points = True
+
 
 
                 elif pygame.sprite.collide_rect(self, e) and (self.rect.top < e.rect.bottom):
@@ -143,6 +153,28 @@ class Player(Alive):
                     self.immunity = True
                     self.immunity_amount += 7
 
+    def restart_player(self):
+        self.immunity_amount = 0
+        self.immunity = False
+        self.jump_boost_amount = 0
+        self.jump_boost = False
+
+        self.right_speed = 0
+        self.left_speed = 0
+        self.y_speed = 0
+        self.on_ground = False
+
+        self.rect.right = self.basic_x
+        self.rect.bottom = self.basic_y
+
+    def show_points(self):
+        self.points_text.text = str(self.points)
+        self.points_text.update_text()
+
+
+
+
+
 
 
 
@@ -154,6 +186,7 @@ class Player(Alive):
 class Environment(Base):
     def __init__(self, image, x, y):
         super().__init__(image, x, y)
+        self.used_for_points = False
 
     def update(self):
         if self.rect.bottom == 650:
@@ -220,6 +253,12 @@ class Level(Base):
 
         self.other_platforms = other_platforms
         self.powerups = powerups
+
+    def restart_level(self):
+        for e in self.set_of_environment:
+            e.kill()
+        for e in self.set_of_powerups:
+            e.kill()
 
 
 
@@ -334,3 +373,36 @@ class Level(Base):
                powerup = Powerup(self.powerups[1], random.randint(100, 1300), -100, 2)
 
            self.set_of_powerups.add(powerup)
+           
+    
+class Text(Base):
+    def __init__(self, image, x, y, text, text_color, font_size, font_type ):
+        super().__init__(image, x, y)
+        self.text = str(text)
+        self.text_color = text_color
+        self.font_size = font_size
+        self.font_type = font_type
+        self.font = pygame.font.SysFont(self.font_type, self.font_size)
+
+
+    def draw_text(self, surface):
+        surface.blit(self.image, self.rect)
+
+    def update_text(self):
+        self.image = self.font.render(self.text, True, self.text_color)
+
+
+
+
+class Button(Text):
+    def __init__(self, image, x, y, text, text_color, font_size, font_type, background_color, width, height):
+        super().__init__(image, x, y, text, text_color, font_size, font_type)
+        self.background_color = background_color
+        self.width = width
+        self.height = height
+        self.rect = pygame.Rect(x, y ,self.width, self.height)
+
+    def draw_button(self, surface):
+        surface.fill(self.background_color, self.rect)
+        self.update_text()
+        self.draw_text(surface)
