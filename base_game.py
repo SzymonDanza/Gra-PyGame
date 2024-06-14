@@ -18,6 +18,7 @@ class Base(pygame.sprite.Sprite):
         self.rect.bottom = y
 
     def draw(self,surface):
+
         surface.blit(self.image,self.rect)
 
 
@@ -28,7 +29,7 @@ class Alive(Base):
 
 
 class Player(Alive):
-    def __init__(self,image,x,y,life, level, other_images):
+    def __init__(self,image,x,y,life, level, other_images,animation_list):
         super().__init__(image,x,y,life)
         self.level = level
         self.right_speed = 0
@@ -61,6 +62,23 @@ class Player(Alive):
         self.jump_boost_amount = 0
         self.immunity = False
         self.immunity_amount = 0
+
+        self.animation_list = animation_list
+        self.frame = 0
+        self.animation_cooldown = 0
+
+
+    def draw(self,surface):
+        self.animate()
+        surface.blit(self.image,self.rect)
+
+    def animate(self):
+        if pygame.time.get_ticks() - self.animation_cooldown >= 200:
+            self.animation_cooldown = pygame.time.get_ticks()
+            self.image = self.animation_list[self.frame]
+            self.frame += 1
+            if self.frame >= len(self.animation_list):
+                self.frame = 0
 
 
 

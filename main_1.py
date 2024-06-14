@@ -19,8 +19,8 @@ DARKBLUE = pygame.color.THECOLORS['darkblue']
 
 
 
-BACKGROUND = pygame.image.load(os.path.join(path, 'background.jpg')).convert()
-file_names.remove('background.jpg')
+BACKGROUND = pygame.image.load(os.path.join(path, 'tlo2.png')).convert()
+file_names.remove('tlo2.png')
 
 IMAGES = {}
 for file_name in file_names:
@@ -29,15 +29,17 @@ for file_name in file_names:
 
 difficulty = 1
 
+animation_list = [IMAGES['kw1'],IMAGES['kw2'],IMAGES['kw3']]
+
 other_platform_list = [IMAGES['vanishStart'], IMAGES['vanishMiddle'], IMAGES['vanishEnd'],
                        IMAGES['mrozStart'], IMAGES['mrozMiddle'], IMAGES['mrozEnd'],
                        IMAGES['slimeStart'], IMAGES['slimeMiddle'], IMAGES['slimeEnd']]
-powerups_list = [IMAGES['powerUp'], IMAGES['kw5']]
+powerups_list = [IMAGES['powerUp'], IMAGES['powerUp2']]
 Test_Level = Level(BACKGROUND, 0, 0, screen, IMAGES['platformStart'],IMAGES['platformMiddle'],IMAGES['platformEnd'], other_platform_list, powerups_list, difficulty)
-
+animation_list = [IMAGES['kw1'], IMAGES['kw2'], IMAGES['kw3']]
 
 other_images_player = [IMAGES['kwmroz']]
-Test = Player(IMAGES['kw1'], 100, 100, 2, Test_Level, other_images_player)
+Test = Player(IMAGES['kw1'], 100, 100, 2, Test_Level, other_images_player,animation_list)
 
 start_button = Button(IMAGES['powerUp'], 533, 45, "START", LIGHTGREEN, 90, "Arial", YELLOW, 300, 150)
 quit_button = Button(IMAGES['powerUp'], 533, 245, "QUIT", LIGHTGREEN, 90, "Arial", YELLOW, 300, 150)
