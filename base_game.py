@@ -396,10 +396,11 @@ class Level(Base):
         self.set_of_environment.update()
         self.set_of_environment.draw(self.surface)
 
-        self.set_of_enemies.update()
-        self.set_of_enemies.draw(self.surface)
         for e in self.set_of_enemies:
             e.animate()
+        self.set_of_enemies.update()
+        self.set_of_enemies.draw(self.surface)
+
 
 
         for e in self.set_of_environment:
