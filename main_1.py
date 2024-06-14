@@ -69,7 +69,7 @@ while window_open:
         if event.type == pygame.QUIT:
 
             window_open = False
-        if event.type == pygame.MOUSEBUTTONDOWN:
+        if event.type == pygame.MOUSEBUTTONDOWN and not active_game:
             if start_button.rect.collidepoint(pygame.mouse.get_pos()):
                 active_game = True
                 paused_game = False

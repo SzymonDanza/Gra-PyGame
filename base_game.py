@@ -123,6 +123,8 @@ class Player(Alive):
                     if not e.used_for_points:
                         self.points += 1
                         e.used_for_points = True
+                        for h in e.homies:
+                            h.used_for_points = True
 
 
 
@@ -167,6 +169,8 @@ class Player(Alive):
         self.rect.right = self.basic_x
         self.rect.bottom = self.basic_y
 
+        self.points = 0
+
     def show_points(self):
         self.points_text.text = str(self.points)
         self.points_text.update_text()
@@ -187,6 +191,7 @@ class Environment(Base):
     def __init__(self, image, x, y):
         super().__init__(image, x, y)
         self.used_for_points = False
+        self.homies = []
 
     def update(self):
         if self.rect.bottom == 650:
@@ -346,6 +351,17 @@ class Level(Base):
 
             end_platform = BasicPlatform(self.image_platform_end, x + (
                         num_middle_segments + 1 ) * self.image_platform_middle.get_width(), y, type)
+
+            homies_list = [start_platform, end_platform]
+            for e in middle_collection:
+                homies_list.append(e)
+
+            start_platform.homies = homies_list
+            end_platform.homies = homies_list
+            for e in middle_collection:
+                e.homies = homies_list
+
+
 
             self.set_of_environment.add(start_platform)
             for e in middle_collection:
