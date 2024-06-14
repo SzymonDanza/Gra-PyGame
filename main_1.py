@@ -36,7 +36,7 @@ other_platform_list = [IMAGES['vanishStart'], IMAGES['vanishMiddle'], IMAGES['va
                        IMAGES['mrozStart'], IMAGES['mrozMiddle'], IMAGES['mrozEnd'],
                        IMAGES['slimeStart'], IMAGES['slimeMiddle'], IMAGES['slimeEnd']]
 powerups_list = [IMAGES['powerUp1'], IMAGES['powerUp2']]
-enemy_list = [IMAGES['kw1'], IMAGES['kw1']]
+enemy_list = [IMAGES['kw1'], IMAGES['kwmroz']]
 Test_Level = Level(BACKGROUND, 0, 0, screen, IMAGES['platformStart'],IMAGES['platformMiddle'],IMAGES['platformEnd'], other_platform_list, powerups_list, difficulty, enemy_list)
 animation_list = [IMAGES['kw1'], IMAGES['kw2'], IMAGES['kw3']]
 

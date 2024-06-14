@@ -200,10 +200,11 @@ class Player(Alive):
 
         if pygame.sprite.spritecollideany(self, self.level.set_of_enemies):
             for e in self.level.set_of_enemies:
-                if pygame.sprite.collide_rect(self, e) and (self.rect.bottom-40 < e.rect.top):
+                print(e.type)
+                if (pygame.sprite.collide_rect(self, e) and (self.rect.bottom-40 < e.rect.top) and e.type == 1) or (pygame.sprite.collide_rect(self, e) and (self.rect.bottom > e.rect.top+50) and e.type == 2):
                     e.kill()
                     self.points += 5
-                elif pygame.sprite.collide_rect(self, e) and (self.rect.bottom > e.rect.top):
+                elif (pygame.sprite.collide_rect(self, e) and (self.rect.bottom > e.rect.top) and e.type == 1) or (True and e.type == 2):
                     self.rect.y += 10
                     if self.rect.left < e.rect.left:
                         self.rect.x -= 200
@@ -492,12 +493,17 @@ class Level(Base):
             self.image_platform_end = self.image_platform_end_basic
 
             if random.randint(1,5) == 1 and type == 0 and len(self.set_of_enemies) < 2:
+                coin = random.randint(1,2)
+                if coin == 1:
+                    type = 1
+                else:
+                    type = 2
                 for e in middle_collection:
-                    new_enemy = Enemy2(self.images_for_enemy[0], e.rect.right, y+(e.rect.top - e.rect.bottom), self.difficulty)
+                    new_enemy = Enemy2(self.images_for_enemy[type - 1], e.rect.right, y+(e.rect.top - e.rect.bottom), self.difficulty, type)
                     break
                 for e in middle_collection:
                     if random.randint(1,len(middle_collection)) == 1:
-                        new_enemy = Enemy2(self.images_for_enemy[0], e.rect.right, y+(e.rect.top - e.rect.bottom), self.difficulty)
+                        new_enemy = Enemy2(self.images_for_enemy[type - 1], e.rect.right, y+(e.rect.top - e.rect.bottom), self.difficulty, type)
                         break
 
                 self.set_of_enemies.add(new_enemy)
