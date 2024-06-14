@@ -217,48 +217,62 @@ class Player(Alive):
 
 
 class Environment(Base):
-    def __init__(self, image, x, y):
+    def __init__(self, image, x, y, speed=2):
         super().__init__(image, x, y)
         self.used_for_points = False
         self.homies = []
+        self.speed_of_platforms = speed
+
+
 
     def update(self):
         if self.rect.bottom == 650:
-            self.rect.move_ip([-2, 0])
+            self.rect.move_ip([-self.speed_of_platforms, 0])
         elif self.rect.bottom == 450:
-            self.rect.move_ip([3, 0])
+            self.rect.move_ip([self.speed_of_platforms + 1, 0])
         elif self.rect.bottom == 250:
-            self.rect.move_ip([-4, 0])
+            self.rect.move_ip([-(self.speed_of_platforms + 2), 0])
 
 
 
 
 
 class BasicPlatform(Environment):
-    def __init__(self, image, x, y, type=0):
-        super().__init__(image, x, y)
+    def __init__(self, image, x, y, difficulty, type=0):
+        if difficulty == 1:
+            super().__init__(image, x, y, 2)
+        elif difficulty == 2:
+            super().__init__(image, x, y, 4)
+        elif difficulty == 3:
+            super().__init__(image, x, y, 6)
         self.type = type
         self.flag = False
         self.starttime = 0
 
 
+
+
 class Powerup(Environment):
-    def __init__(self, image, x, y, type=0):
-        super().__init__(image, x, y)
+    def __init__(self, image, x, y, difficulty, type=0):
+        super().__init__(image, x, y,difficulty)
         self.type = type
         self.set_of_environment = pygame.sprite.Group()
         self.caught = False
+        self.speed_of_platforms = 2
 
     def update(self, group):
         if not self.caught:
             self.rect.move_ip([0, 3])
         else:
+            self.set_of_environment = group
+            for e in self.set_of_environment:
+                self.speed_of_platforms = e.speed_of_platforms
             if self.rect.top < 250:
-                self.rect.move_ip([-4, 0])
+                self.rect.move_ip([-(self.speed_of_platforms + 2), 0])
             elif 250 < self.rect.top < 450:
-                self.rect.move_ip([3, 0])
+                self.rect.move_ip([self.speed_of_platforms + 1, 0])
             else:
-                self.rect.move_ip([-2, 0])
+                self.rect.move_ip([-self.speed_of_platforms, 0])
         self.set_of_environment = group
         if pygame.sprite.spritecollideany(self, self.set_of_environment):
             self.caught = True
@@ -267,7 +281,7 @@ class Powerup(Environment):
 
 
 class Level(Base):
-    def __init__(self, image, x, y, surface, image_platform_start, image_platform_middle, image_platform_end, other_platforms, powerups):
+    def __init__(self, image, x, y, surface, image_platform_start, image_platform_middle, image_platform_end, other_platforms, powerups, difficulty):
         super().__init__(image, x, y)
         self.set_of_environment = pygame.sprite.Group()
         self.set_of_environment_low = pygame.sprite.Group()
@@ -287,6 +301,8 @@ class Level(Base):
 
         self.other_platforms = other_platforms
         self.powerups = powerups
+        self.difficulty = difficulty
+
 
     def restart_level(self):
         for e in self.set_of_environment:
@@ -341,6 +357,7 @@ class Level(Base):
                     x=1400
                     break
 
+            print(self.difficulty)
 
             if len(self.set_of_special_platforms) < 2:
                 coin = random.randint(1, 12)
@@ -365,7 +382,7 @@ class Level(Base):
             else:
                 type = 0
 
-            start_platform = BasicPlatform(self.image_platform_start, x, y, type)
+            start_platform = BasicPlatform(self.image_platform_start, x, y,self.difficulty, type)
             if coin <= 6:
                 self.set_of_special_platforms.add(start_platform)
 
@@ -375,11 +392,11 @@ class Level(Base):
             middle_collection = []
             for i in range(num_middle_segments):
                     middle_collection.append(BasicPlatform(self.image_platform_middle,
-                                                    x + (i+1) * self.image_platform_middle.get_width(), y, type))
+                                                    x + (i+1) * self.image_platform_middle.get_width(), y,self.difficulty, type))
 
 
             end_platform = BasicPlatform(self.image_platform_end, x + (
-                        num_middle_segments + 1 ) * self.image_platform_middle.get_width(), y, type)
+                        num_middle_segments + 1 ) * self.image_platform_middle.get_width(), y, self.difficulty, type)
 
             homies_list = [start_platform, end_platform]
             for e in middle_collection:

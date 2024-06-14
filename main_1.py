@@ -14,6 +14,8 @@ file_names = os.listdir(path)
 YELLOW = pygame.color.THECOLORS['yellow']
 LIGHTGREEN = pygame.color.THECOLORS['lightgreen']
 DARKRED = pygame.color.THECOLORS['darkred']
+DARKBLUE = pygame.color.THECOLORS['darkblue']
+
 
 
 
@@ -25,13 +27,13 @@ for file_name in file_names:
     image_name = file_name[:-4]
     IMAGES[image_name] = pygame.image.load(os.path.join(path, file_name)).convert_alpha(BACKGROUND)
 
-
+difficulty = 1
 
 other_platform_list = [IMAGES['vanishStart'], IMAGES['vanishMiddle'], IMAGES['vanishEnd'],
                        IMAGES['mrozStart'], IMAGES['mrozMiddle'], IMAGES['mrozEnd'],
                        IMAGES['slimeStart'], IMAGES['slimeMiddle'], IMAGES['slimeEnd']]
 powerups_list = [IMAGES['powerUp'], IMAGES['kw5']]
-Test_Level = Level(BACKGROUND, 0, 0, screen, IMAGES['platformStart'],IMAGES['platformMiddle'],IMAGES['platformEnd'], other_platform_list, powerups_list)
+Test_Level = Level(BACKGROUND, 0, 0, screen, IMAGES['platformStart'],IMAGES['platformMiddle'],IMAGES['platformEnd'], other_platform_list, powerups_list, difficulty)
 
 
 other_images_player = [IMAGES['kwmroz']]
@@ -40,6 +42,12 @@ Test = Player(IMAGES['kw1'], 100, 100, 2, Test_Level, other_images_player)
 start_button = Button(IMAGES['powerUp'], 533, 45, "START", LIGHTGREEN, 90, "Arial", YELLOW, 300, 150)
 quit_button = Button(IMAGES['powerUp'], 533, 245, "QUIT", LIGHTGREEN, 90, "Arial", YELLOW, 300, 150)
 restart_button = Button(IMAGES['powerUp'], 533, 445, "RESTART", LIGHTGREEN, 60, "Arial", YELLOW, 300, 150)
+difficulty_button = Button(IMAGES['powerUp'], 533, 445, "DIFFICULTY", LIGHTGREEN, 50, "Arial", YELLOW, 300, 150)
+
+easy_button = Button(IMAGES['powerUp'], 533, 45, "EASY", LIGHTGREEN, 90, "Arial", YELLOW, 300, 150)
+med_button = Button(IMAGES['powerUp'], 533, 245, "MEDIUM", LIGHTGREEN, 90, "Arial", YELLOW, 300, 150)
+diff_button = Button(IMAGES['powerUp'], 533, 445, "HARD", LIGHTGREEN, 90, "Arial", YELLOW, 300, 150)
+quit_dif_button = Button(IMAGES['powerUp'], 533, 645, "DONE", LIGHTGREEN, 90, "Arial", YELLOW, 300, 150)
 
 won_text = Text(IMAGES['powerUp'], 100, 100, ": D",DARKRED , 50, "Arial")
 lost_text = Text(IMAGES['powerUp'], 100, 100, ": C", DARKRED, 50, "Arial")
@@ -53,14 +61,16 @@ lost_text = Text(IMAGES['powerUp'], 100, 100, ": C", DARKRED, 50, "Arial")
 window_open = True
 active_game = False
 paused_game = False
+difficulty_choice = False
 
 game_lost = False
 game_won = False
 
 
+
+
 while window_open:
     ##Test.move(pygame.key.get_pressed())
-
 
     for event in pygame.event.get():
         if event.type == pygame.KEYDOWN:
@@ -75,18 +85,28 @@ while window_open:
 
             window_open = False
         if event.type == pygame.MOUSEBUTTONDOWN and not active_game:
-            if start_button.rect.collidepoint(pygame.mouse.get_pos()):
+            if start_button.rect.collidepoint(pygame.mouse.get_pos()) and not difficulty_choice:
                 active_game = True
                 paused_game = False
                 pygame.time.delay(200)
-            if quit_button.rect.collidepoint(pygame.mouse.get_pos()):
+            elif start_button.rect.collidepoint(pygame.mouse.get_pos()) and difficulty_choice:
+                Test_Level.difficulty = 1
+            if quit_button.rect.collidepoint(pygame.mouse.get_pos()) and not difficulty_choice:
                 window_open = False
                 pygame.time.delay(200)
+            elif quit_button.rect.collidepoint(pygame.mouse.get_pos()) and difficulty_choice:
+                Test_Level.difficulty = 2
             if restart_button.rect.collidepoint(pygame.mouse.get_pos()) and paused_game:
                 Test_Level.restart_level()
                 Test.restart_player()
                 active_game = True
                 paused_game = False
+            elif restart_button.rect.collidepoint(pygame.mouse.get_pos()) and not paused_game and not difficulty_choice:
+                difficulty_choice = True
+            elif restart_button.rect.collidepoint(pygame.mouse.get_pos()) and not paused_game and difficulty_choice:
+                Test_Level.difficulty = 3
+            if quit_dif_button.rect.collidepoint(pygame.mouse.get_pos()):
+                difficulty_choice = False
 
 
     if active_game:
@@ -110,10 +130,22 @@ while window_open:
             window_open = False
 
     else:
-        if not paused_game:
+        if not paused_game and not difficulty_choice:
             screen.fill(DARKRED)
             start_button.draw_button(screen)
             quit_button.draw_button(screen)
+            difficulty_button.draw_button(screen)
+        elif difficulty_choice:
+            if Test_Level.difficulty == 1:
+                screen.fill(DARKBLUE)
+            elif Test_Level.difficulty == 2:
+                screen.fill(LIGHTGREEN)
+            elif Test_Level.difficulty == 3:
+                screen.fill(DARKRED)
+            easy_button.draw_button(screen)
+            med_button.draw_button(screen)
+            diff_button.draw_button(screen)
+            quit_dif_button.draw_button(screen)
         else:
             start_button.draw_text(screen)
             quit_button.draw_text(screen)
