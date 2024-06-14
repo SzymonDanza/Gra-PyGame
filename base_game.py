@@ -22,6 +22,9 @@ class Base(pygame.sprite.Sprite):
         surface.blit(self.image,self.rect)
 
 
+
+
+
 class Alive(Base):
     def __init__(self, image, x, y, life):
         super().__init__(image,x,y)
@@ -195,6 +198,19 @@ class Player(Alive):
                 self.last_points_loss = pygame.time.get_ticks()
                 self.points -= 10
 
+        if pygame.sprite.spritecollideany(self, self.level.set_of_enemies):
+            for e in self.level.set_of_enemies:
+                if pygame.sprite.collide_rect(self, e) and (self.rect.bottom-40 < e.rect.top):
+                    e.kill()
+                    self.points += 5
+                elif pygame.sprite.collide_rect(self, e) and (self.rect.bottom > e.rect.top):
+                    self.rect.y += 10
+                    if self.rect.left < e.rect.left:
+                        self.rect.x -= 200
+                    if self.rect.right > e.rect.right:
+                        self.rect.x += 200
+                    self.on_ground = False
+
 
     def restart_player(self):
         self.immunity_amount = 0
@@ -251,11 +267,11 @@ class Environment(Base):
 
 
     def update(self):
-        if self.rect.bottom == 650:
+        if 450 < self.rect.bottom <= 650:
             self.rect.move_ip([-self.speed_of_platforms, 0])
-        elif self.rect.bottom == 450:
+        elif 250 < self.rect.bottom <= 450:
             self.rect.move_ip([self.speed_of_platforms + 1, 0])
-        elif self.rect.bottom == 250:
+        elif self.rect.bottom <= 250:
             self.rect.move_ip([-(self.speed_of_platforms + 2), 0])
 
 
@@ -302,11 +318,25 @@ class Powerup(Environment):
         if pygame.sprite.spritecollideany(self, self.set_of_environment):
             self.caught = True
 
+class Enemy2(Environment):
+    def __init__(self, image, x, y, difficulty, type=0):
+        if difficulty == 1:
+            super().__init__(image, x, y, 2)
+        elif difficulty == 2:
+            super().__init__(image, x, y, 4)
+        elif difficulty == 3:
+            super().__init__(image, x, y, 6)
+        self.type = type
+
+
+
+
+
 
 
 
 class Level(Base):
-    def __init__(self, image, x, y, surface, image_platform_start, image_platform_middle, image_platform_end, other_platforms, powerups, difficulty):
+    def __init__(self, image, x, y, surface, image_platform_start, image_platform_middle, image_platform_end, other_platforms, powerups, difficulty, images_for_enemy):
         super().__init__(image, x, y)
         self.set_of_environment = pygame.sprite.Group()
         self.set_of_environment_low = pygame.sprite.Group()
@@ -314,6 +344,7 @@ class Level(Base):
         self.set_of_environment_hig = pygame.sprite.Group()
         self.set_of_special_platforms = pygame.sprite.Group()
         self.set_of_powerups = pygame.sprite.Group()
+        self.set_of_enemies = pygame.sprite.Group()
         self.surface = surface
 
         self.image_platform_start_basic = image_platform_start
@@ -323,6 +354,8 @@ class Level(Base):
         self.image_platform_start = image_platform_start
         self.image_platform_middle = image_platform_middle
         self.image_platform_end = image_platform_end
+
+        self.images_for_enemy = images_for_enemy
 
         self.other_platforms = other_platforms
         self.powerups = powerups
@@ -338,6 +371,7 @@ class Level(Base):
 
 
     def update_level(self):
+
         self.surface.blit(self.image, (self.rect.right, self.rect.bottom))
 
         self.set_of_powerups.update(self.set_of_environment)
@@ -345,6 +379,9 @@ class Level(Base):
 
         self.set_of_environment.update()
         self.set_of_environment.draw(self.surface)
+
+        self.set_of_enemies.update()
+        self.set_of_enemies.draw(self.surface)
 
 
         for e in self.set_of_environment:
@@ -362,6 +399,10 @@ class Level(Base):
 
         for e in self.set_of_powerups:
             if e.rect.top > 740 or e.rect.right < 0 or e.rect.right > 1500:
+                e.kill()
+
+        for e in self.set_of_enemies:
+            if e.rect.right < 0 or e.rect.right > 1500:
                 e.kill()
 
 
@@ -449,6 +490,18 @@ class Level(Base):
             self.image_platform_start = self.image_platform_start_basic
             self.image_platform_middle = self.image_platform_middle_basic
             self.image_platform_end = self.image_platform_end_basic
+
+            if random.randint(1,5) == 1 and type == 0 and len(self.set_of_enemies) < 2:
+                for e in middle_collection:
+                    new_enemy = Enemy2(self.images_for_enemy[0], e.rect.right, y+(e.rect.top - e.rect.bottom), self.difficulty)
+                    break
+                for e in middle_collection:
+                    if random.randint(1,len(middle_collection)) == 1:
+                        new_enemy = Enemy2(self.images_for_enemy[0], e.rect.right, y+(e.rect.top - e.rect.bottom), self.difficulty)
+                        break
+
+                self.set_of_enemies.add(new_enemy)
+
 
     def add_powerup(self):
        if  random.randint(1, 40) == 1 and len(self.set_of_powerups) < 1:
