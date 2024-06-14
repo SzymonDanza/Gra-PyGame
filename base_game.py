@@ -28,6 +28,10 @@ class Alive(Base):
         self.life = life
 
 
+
+
+
+
 class Player(Alive):
     def __init__(self,image,x,y,life, level, other_images,animation_list):
         super().__init__(image,x,y,life)
@@ -174,6 +178,7 @@ class Player(Alive):
             self.slip = False
 
         if pygame.sprite.spritecollideany(self, self.level.set_of_powerups):
+
             self.points += 5
             for e in self.level.set_of_powerups:
                 e.kill()
@@ -209,6 +214,8 @@ class Player(Alive):
         self.last_points_loss = pygame.time.get_ticks() + 10000
 
     def show_points(self):
+
+
         if self.points < 0:
             self.points_text.text_color = DARKRED
         if self.points_text.text_color == DARKRED and self.points > 0:
@@ -375,7 +382,7 @@ class Level(Base):
                     x=1400
                     break
 
-            print(self.difficulty)
+
 
             if len(self.set_of_special_platforms) < 2:
                 coin = random.randint(1, 12)
@@ -446,11 +453,11 @@ class Level(Base):
     def add_powerup(self):
        if  random.randint(1, 40) == 1 and len(self.set_of_powerups) < 1:
            if random.randint(1,2) == 1:
-               powerup = Powerup(self.powerups[0], random.randint(100, 1300), -100, 1)
+               powerup = Powerup(self.powerups[0], random.randint(100, 1300), -100, 1,1)
 
 
            else:
-               powerup = Powerup(self.powerups[1], random.randint(100, 1300), -100, 2)
+               powerup = Powerup(self.powerups[1], random.randint(100, 1300), -100, 1, 2)
 
            self.set_of_powerups.add(powerup)
            
