@@ -280,7 +280,7 @@ class Level(Base):
 
 
     def update_level(self):
-        self.surface.blit(self.image, (-300, -300))
+        self.surface.blit(self.image, (self.rect.right, self.rect.bottom))
 
         self.set_of_powerups.update(self.set_of_environment)
         self.set_of_powerups.draw(self.surface)

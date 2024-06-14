@@ -29,7 +29,7 @@ other_platform_list = [IMAGES['vanishStart'], IMAGES['vanishMiddle'], IMAGES['va
                        IMAGES['mrozStart'], IMAGES['mrozMiddle'], IMAGES['mrozEnd'],
                        IMAGES['slimeStart'], IMAGES['slimeMiddle'], IMAGES['slimeEnd']]
 powerups_list = [IMAGES['powerUp'], IMAGES['kw5']]
-Test_Level = Level(BACKGROUND, 100, 200, screen, IMAGES['platformStart'],IMAGES['platformMiddle'],IMAGES['platformEnd'], other_platform_list, powerups_list)
+Test_Level = Level(BACKGROUND, 0, 0, screen, IMAGES['platformStart'],IMAGES['platformMiddle'],IMAGES['platformEnd'], other_platform_list, powerups_list)
 
 
 other_images_player = [IMAGES['kwmroz']]
