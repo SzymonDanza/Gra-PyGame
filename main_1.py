@@ -12,6 +12,7 @@ path = os.path.join(os.getcwd(), 'img')
 file_names = os.listdir(path)
 
 YELLOW = pygame.color.THECOLORS['yellow']
+WHITE = pygame.color.THECOLORS['white']
 LIGHTGREEN = pygame.color.THECOLORS['lightgreen']
 DARKRED = pygame.color.THECOLORS['darkred']
 DARKBLUE = pygame.color.THECOLORS['darkblue']
@@ -37,7 +38,7 @@ other_platform_list = [IMAGES['vanishStart'], IMAGES['vanishMiddle'], IMAGES['va
                        IMAGES['slimeStart'], IMAGES['slimeMiddle'], IMAGES['slimeEnd']]
 powerups_list = [IMAGES['powerUp1'], IMAGES['powerUp2']]
 enemy_list = [IMAGES['kw1'], IMAGES['kwmroz']]
-enemy_animation = [[IMAGES['kw1'], IMAGES['kwmroz']],[IMAGES['kwmroz'], IMAGES['kwmroz']]]
+enemy_animation = [[IMAGES['cir1'], IMAGES['cir2'], IMAGES['cir3']],[IMAGES['tri1'], IMAGES['tri2'], IMAGES['tri3']]]
 Test_Level = Level(BACKGROUND, 0, 0, screen, IMAGES['platformStart'],IMAGES['platformMiddle'],IMAGES['platformEnd'], other_platform_list, powerups_list, difficulty, enemy_list, enemy_animation )
 animation_list = [IMAGES['kw1'], IMAGES['kw2'], IMAGES['kw3']]
 
@@ -49,13 +50,13 @@ quit_button = Button(IMAGES['powerUp1'], 533, 245, "QUIT", LIGHTGREEN, 90, "Aria
 restart_button = Button(IMAGES['powerUp1'], 533, 445, "RESTART", LIGHTGREEN, 60, "Arial", YELLOW, 300, 150)
 difficulty_button = Button(IMAGES['powerUp1'], 533, 445, "DIFFICULTY", LIGHTGREEN, 50, "Arial", YELLOW, 300, 150)
 
-easy_button = Button(IMAGES['powerUp1'], 533, 45, "EASY", LIGHTGREEN, 90, "Arial", YELLOW, 300, 150)
-med_button = Button(IMAGES['powerUp1'], 533, 245, "MEDIUM", LIGHTGREEN, 90, "Arial", YELLOW, 300, 150)
-diff_button = Button(IMAGES['powerUp1'], 533, 445, "HARD", LIGHTGREEN, 90, "Arial", YELLOW, 300, 150)
-quit_dif_button = Button(IMAGES['powerUp1'], 533, 645, "DONE", LIGHTGREEN, 90, "Arial", YELLOW, 300, 150)
+easy_button = Button(IMAGES['powerUp1'], 533, 80, "EASY", LIGHTGREEN, 70, "Arial", YELLOW, 300, 100)
+med_button = Button(IMAGES['powerUp1'], 533, 270, "MEDIUM", LIGHTGREEN, 70, "Arial", YELLOW, 300, 100)
+diff_button = Button(IMAGES['powerUp1'], 533, 450, "HARD", LIGHTGREEN, 70, "Arial", YELLOW, 300, 100)
+quit_dif_button = Button(IMAGES['powerUp1'], 533, 630, "DONE", LIGHTGREEN, 70, "Arial", WHITE , 300, 100,34)
 
-won_text = Text(IMAGES['powerUp1'], 100, 100, ": D",DARKRED , 50, "Arial")
-lost_text = Text(IMAGES['powerUp1'], 100, 100, ": C", DARKRED, 50, "Arial")
+won_text = Text(IMAGES['powerUp1'], 500, 400, ": YOU WON",DARKRED , 50, "Arial")
+lost_text = Text(IMAGES['powerUp1'], 500, 400, ": GAME OVER", DARKRED, 50, "Arial")
 
 
 
@@ -137,9 +138,9 @@ while window_open:
     else:
         if not paused_game and not difficulty_choice:
             screen.fill(DARKRED)
-            start_button.draw_button(screen)
-            quit_button.draw_button(screen)
-            difficulty_button.draw_button(screen)
+            start_button.draw_text(screen)
+            quit_button.draw_text(screen)
+            difficulty_button.draw_text(screen)
         elif difficulty_choice:
             if Test_Level.difficulty == 1:
                 screen.fill(DARKBLUE)
@@ -147,10 +148,10 @@ while window_open:
                 screen.fill(LIGHTGREEN)
             elif Test_Level.difficulty == 3:
                 screen.fill(DARKRED)
-            easy_button.draw_button(screen)
-            med_button.draw_button(screen)
-            diff_button.draw_button(screen)
-            quit_dif_button.draw_button(screen)
+            easy_button.draw_text(screen)
+            med_button.draw_text(screen)
+            diff_button.draw_text(screen)
+            quit_dif_button.draw_text(screen)
         else:
             start_button.draw_text(screen)
             quit_button.draw_text(screen)

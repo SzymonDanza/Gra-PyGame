@@ -46,11 +46,11 @@ class Player(Alive):
         self.basic_x = x
         self.basic_y = y
         self.points = 0
-        self.points_text = Text(image, x+10, y+10, "0", DARKBLUE, 50, "Arial")
+        self.points_text = Text(image, x+1200, y+10, "0", DARKBLUE, 50, "Arial")
         self.last_points_loss = pygame.time.get_ticks() + 10000
 
-        self.boost_one_text = Text(image, x+100, y+10, "0", YELLOW, 50, "Arial")
-        self.boost_two_text = Text(image, x+200, y+10, "0", LIGHTGREEN, 50, "Arial")
+        self.boost_one_text = Text(image, x, y+630, "0", YELLOW, 50, "Arial")
+        self.boost_two_text = Text(image, x+70, y+630, "0", LIGHTGREEN, 50, "Arial")
 
         self.right_speed = 0
         self.left_speed = 0
@@ -558,16 +558,27 @@ class Text(Base):
     def update_text(self):
         self.image = self.font.render(self.text, True, self.text_color)
 
-
-
-
 class Button(Text):
-    def __init__(self, image, x, y, text, text_color, font_size, font_type, background_color, width, height):
+    def __init__(self, image, x, y, text, text_color, font_size, font_type, background_color, width, height,
+                    corner_radius=500):
         super().__init__(image, x, y, text, text_color, font_size, font_type)
         self.background_color = background_color
         self.width = width
         self.height = height
-        self.rect = pygame.Rect(x, y ,self.width, self.height)
+        self.corner_radius = corner_radius
+        self.rect = pygame.Rect(x, y, self.width, self.height)
+
+    def draw_rounded_rect(self, surface, color, rect, corner_radius):
+        pygame.draw.rect(surface, color, rect, border_radius=corner_radius)
+
+    def draw_text(self, surface):
+
+        self.draw_rounded_rect(surface, self.background_color, self.rect, self.corner_radius)
+
+
+        text_surface = self.font.render(self.text, True, self.text_color)
+        text_rect = text_surface.get_rect(center=self.rect.center)
+        surface.blit(text_surface, text_rect)
 
     def draw_button(self, surface):
         surface.fill(self.background_color, self.rect)
