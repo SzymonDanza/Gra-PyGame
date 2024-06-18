@@ -55,8 +55,8 @@ med_button = Button(IMAGES['powerUp1'], 533, 270, "MEDIUM", LIGHTGREEN, 70, "Ari
 diff_button = Button(IMAGES['powerUp1'], 533, 450, "HARD", LIGHTGREEN, 70, "Arial", YELLOW, 300, 100)
 quit_dif_button = Button(IMAGES['powerUp1'], 533, 630, "DONE", LIGHTGREEN, 70, "Arial", WHITE , 300, 100,34)
 
-won_text = Text(IMAGES['powerUp1'], 500, 400, ": YOU WON",DARKRED , 50, "Arial")
-lost_text = Text(IMAGES['powerUp1'], 500, 400, ": GAME OVER", DARKRED, 50, "Arial")
+won_text = Text(IMAGES['powerUp1'], 120, 200, "WINNNER!!!",DARKRED , 250, "dubai")
+lost_text = Text(IMAGES['powerUp1'], 80, 200, "GAME OVER", DARKRED, 250, "dubai")
 
 
 
