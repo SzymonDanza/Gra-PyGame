@@ -136,16 +136,17 @@ class Player(Alive):
                         self.immunity = False
                 self.on_ground = False
 
-        # Apply gravity
+        
         self.y_speed += gravity
         self.rect.y += self.y_speed
 
-        # Check if player is on the ground
+        # sprawdzenie czy stoi na dole ekranu
         if self.rect.bottom >= 740:
             self.rect.bottom = 740
             self.y_speed = 0
             self.on_ground = True
 
+        # kolizja z platformami
         if pygame.sprite.spritecollideany(self, self.level.set_of_environment):
             for e in self.level.set_of_environment:
                 if pygame.sprite.collide_rect(self, e) and (self.rect.bottom > e.rect.top) and (self.rect.top < e.rect.top) and (self.rect.top < e.rect.bottom):
@@ -158,20 +159,24 @@ class Player(Alive):
                             ychange = -6
                             e.flag = True
 
+                        #znikajaca
                         if e.flag == True and pygame.time.get_ticks() - e.starttime >= 500:
                             ychange = 6
                             e.flag = False
                             e.kill()
 
+                    #mrozna
                     if e.type == 2 and not self.immunity:
                         self.frozen = True
                         freeze_sound.play()
                         self.image = self.other_images[0]
                         self.starttime = pygame.time.get_ticks()
 
+                    #slizgajaca
                     if e.type == 3 and not self.immunity:
                         self.slip = True
 
+                    #punkty za platforme
                     if not e.used_for_points:
                         self.points += 1
                         e.used_for_points = True
@@ -181,7 +186,7 @@ class Player(Alive):
                                 self.points += 1
 
 
-
+                #kolizje
                 elif pygame.sprite.collide_rect(self, e) and (self.rect.top < e.rect.bottom):
                     self.rect.top = e.rect.bottom
                     self.y_speed = 0
@@ -198,36 +203,44 @@ class Player(Alive):
 
             self.slip = False
 
+        # kolizje z powerupami
         if pygame.sprite.spritecollideany(self, self.level.set_of_powerups):
             powerup_sound.play()
 
             self.points += 5
             for e in self.level.set_of_powerups:
                 e.kill()
+
+                # skok boost
                 if e.type == 1:
                     self.jump_boost = True
                     self.jump_boost_amount += 5
 
+                # odpornosc boost
                 if e.type == 2:
                     self.immunity = True
                     self.immunity_amount += 5
 
+        # minusowe punkty za podługe
         if self.rect.bottom >= 740:
             if pygame.time.get_ticks() - self.last_points_loss >= 1000:
                 fall_sound.play()
                 self.last_points_loss = pygame.time.get_ticks()
                 self.points -= 10
 
+        # kolizje z enemy
         if pygame.sprite.spritecollideany(self, self.level.set_of_enemies):
 
+            # dobry skok
             for e in self.level.set_of_enemies:
                 if (pygame.sprite.collide_rect(self, e) and (self.rect.bottom-40 < e.rect.top) and e.type == 1) or (pygame.sprite.collide_rect(self, e) and (self.rect.bottom > e.rect.top+50) and e.type == 2):
                     e.kill()
                     self.points += 5
+                # zły skok
                 elif (pygame.sprite.collide_rect(self, e) and (self.rect.bottom > e.rect.top) and e.type == 1) or (True and e.type == 2):
                     dmg_sound.play()
 
-                    ##self.rect.y += 10
+                    
                     if self.rect.left < e.rect.left and e.type == 1:
                         self.rect.x -= 200
                     if self.rect.right > e.rect.right and e.type == 1:
@@ -238,7 +251,7 @@ class Player(Alive):
                         self.rect.x += 100
                     self.on_ground = False
 
-
+    
     def restart_player(self):
         self.immunity_amount = 0
         self.immunity = False
@@ -294,6 +307,7 @@ class Environment(Base):
 
 
     def update(self):
+        # poruszanie sie pklatform
         if 450 < self.rect.bottom <= 650:
             self.rect.move_ip([-self.speed_of_platforms, 0])
         elif 250 < self.rect.bottom <= 450:
@@ -331,6 +345,7 @@ class Powerup(Environment):
     def update(self, group):
         if not self.caught:
             self.rect.move_ip([0, 3])
+        # przyklejanie sie do platform 
         else:
             self.set_of_environment = group
             for e in self.set_of_environment:
@@ -427,6 +442,7 @@ class Level(Base):
 
 
         for e in self.set_of_environment:
+            # wyrzucanie platform za ekranem + respienie nowych po pewnej odległości bez usuwania + usuwanie enemy i powerupow 
             if e.rect.right < 0:
                 e.kill()
             if e.rect.right > 1500 and e.rect.bottom == 450:
@@ -450,7 +466,9 @@ class Level(Base):
 
     def add_basic_platform(self):
         if random.randint(1, 40) == 1 and len(self.set_of_environment) < 400 and (len(self.set_of_environment_low) < 1 or len(self.set_of_environment_mid) < 1 or len(self.set_of_environment_hig) < 1):
-            while True:
+            while True:    
+
+                # wybor wysokosci
                 coin = random.randint(1,3)
                 if coin == 1 and len(self.set_of_environment_low) < 1:
                     y=650
@@ -466,12 +484,13 @@ class Level(Base):
                     break
 
 
-
+            # decyzja czy to specjalna
             if len(self.set_of_special_platforms) < 2:
                 coin = random.randint(1, 12)
             else:
                 coin = 12
 
+            # ustawienie grafiki
             if coin <= 3:
                 type = 1
                 self.image_platform_start = self.other_platforms[0]
@@ -490,22 +509,24 @@ class Level(Base):
             else:
                 type = 0
 
+            # pierwszaa platforma 
             start_platform = BasicPlatform(self.image_platform_start, x, y,self.difficulty, type)
             if coin <= 6:
                 self.set_of_special_platforms.add(start_platform)
 
 
-
+            # losowanie ilosci platform w srodku i ich generacja
             num_middle_segments = random.randint(1, 2)
             middle_collection = []
             for i in range(num_middle_segments):
                     middle_collection.append(BasicPlatform(self.image_platform_middle,
                                                     x + (i+1) * self.image_platform_middle.get_width(), y,self.difficulty, type))
 
-
+            # koncowa platforma
             end_platform = BasicPlatform(self.image_platform_end, x + (
                         num_middle_segments + 1 ) * self.image_platform_middle.get_width(), y, self.difficulty, type)
 
+            # generowanie polaczen do punktow
             homies_list = [start_platform, end_platform]
             for e in middle_collection:
                 homies_list.append(e)
@@ -516,7 +537,7 @@ class Level(Base):
                 e.homies = homies_list
 
 
-
+            # dodawanie do setow i innych
             self.set_of_environment.add(start_platform)
             for e in middle_collection:
                 self.set_of_environment.add(e)
@@ -533,6 +554,7 @@ class Level(Base):
             self.image_platform_middle = self.image_platform_middle_basic
             self.image_platform_end = self.image_platform_end_basic
 
+            # decyzja czy na platformie jest przeciwniki i jaki
             if random.randint(1,5) == 1 and type == 0 and len(self.set_of_enemies) < 2:
                 coin = random.randint(1,2)
                 if coin == 1:
@@ -551,7 +573,7 @@ class Level(Base):
 
 
 
-
+    # decyzja i dodawanie powerupow
     def add_powerup(self):
        if  random.randint(1, 40) == 1 and len(self.set_of_powerups) < 1:
            if random.randint(1,2) == 1:
