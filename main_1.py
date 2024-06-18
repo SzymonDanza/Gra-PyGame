@@ -81,7 +81,10 @@ game_won = False
 pygame.mixer.music.load('sounds/freeze.wav')
 
 
+
+
 pygame.mixer.music.play()
+pygame.mixer.music.set_volume(0.1)
 
 while window_open:
     ##Test.move(pygame.key.get_pressed())
@@ -136,7 +139,7 @@ while window_open:
         if Test.immunity:
             Test.boost_two_text.draw_text(screen)
 
-        if Test.points >= 10:
+        if Test.points >= 100:
             game_won = True
             window_open = False
         if Test.points < -20:

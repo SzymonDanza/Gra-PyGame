@@ -14,11 +14,15 @@ DARKBLUE = pygame.color.THECOLORS['darkblue']
 
 
 jump_sound = pygame.mixer.Sound(os.path.join(path2, 'freeze.wav'))
+jump_sound.set_volume(0)
 freeze_sound = pygame.mixer.Sound(os.path.join(path2, 'freeze.wav'))
-dmg_sound = pygame.mixer.Sound(os.path.join(path2, 'freeze.wav'))
-fall_sound = pygame.mixer.Sound(os.path.join(path2, 'freeze.wav'))
+freeze_sound.set_volume(0.4)
+dmg_sound = pygame.mixer.Sound(os.path.join(path2, 'dmg.wav'))
+dmg_sound.set_volume(0.5)
+fall_sound = pygame.mixer.Sound(os.path.join(path2, 'fall.wav'))
+fall_sound.set_volume(1)
 powerup_sound = pygame.mixer.Sound(os.path.join(path2, 'freeze.wav'))
-
+powerup_sound.set_volume(0)
 
 
 
@@ -121,6 +125,7 @@ class Player(Alive):
                     self.rect.x += 7
             if key[pygame.K_SPACE] and self.on_ground:
                 jump_sound.play()
+
                 if self.jump_boost:
                     self.y_speed = -30
                     self.jump_boost_amount -= 1
