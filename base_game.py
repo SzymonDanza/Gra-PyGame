@@ -15,9 +15,9 @@ DARKBLUE = pygame.color.THECOLORS['darkblue']
 
 jump_sound = pygame.mixer.Sound(os.path.join(path2, 'freeze.wav'))
 freeze_sound = pygame.mixer.Sound(os.path.join(path2, 'freeze.wav'))
-dmg_sound = pygame.mixer.Sound(os.path.join(path2, 'bonus.ogg'))
-fall_sound = pygame.mixer.Sound(os.path.join(path2, 'bonus.ogg'))
-powerup_sound = pygame.mixer.Sound(os.path.join(path2, 'bonus.ogg'))
+dmg_sound = pygame.mixer.Sound(os.path.join(path2, 'freeze.wav'))
+fall_sound = pygame.mixer.Sound(os.path.join(path2, 'freeze.wav'))
+powerup_sound = pygame.mixer.Sound(os.path.join(path2, 'freeze.wav'))
 
 
 

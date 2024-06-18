@@ -3,6 +3,7 @@ import  pygame,os,random
 from base_game import Alive, Player, Level, BasicPlatform, Button, Text
 
 pygame.init()
+pygame.mixer.init()
 
 SIZESCREEN = WIDTH, HEIGHT = 1366, 740
 screen = pygame.display.set_mode(SIZESCREEN)
@@ -16,6 +17,7 @@ WHITE = pygame.color.THECOLORS['white']
 LIGHTGREEN = pygame.color.THECOLORS['lightgreen']
 DARKRED = pygame.color.THECOLORS['darkred']
 DARKBLUE = pygame.color.THECOLORS['darkblue']
+
 
 
 
@@ -74,6 +76,12 @@ game_won = False
 
 
 
+
+
+pygame.mixer.music.load('sounds/freeze.wav')
+
+
+pygame.mixer.music.play()
 
 while window_open:
     ##Test.move(pygame.key.get_pressed())
