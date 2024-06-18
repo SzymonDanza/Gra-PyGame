@@ -78,13 +78,13 @@ game_won = False
 
 
 
-pygame.mixer.music.load('sounds/freeze.wav')
+pygame.mixer.music.load('sounds/back2.wav')
 
 
 
 
 pygame.mixer.music.play()
-pygame.mixer.music.set_volume(0.1)
+pygame.mixer.music.set_volume(1)
 
 while window_open:
     ##Test.move(pygame.key.get_pressed())

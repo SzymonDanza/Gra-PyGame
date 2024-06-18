@@ -13,16 +13,20 @@ DARKRED = pygame.color.THECOLORS['darkred']
 DARKBLUE = pygame.color.THECOLORS['darkblue']
 
 
-jump_sound = pygame.mixer.Sound(os.path.join(path2, 'freeze.wav'))
-jump_sound.set_volume(0)
+jump_sound = pygame.mixer.Sound(os.path.join(path2, 'jump.wav'))
+jump_sound.set_volume(0.3)
+
 freeze_sound = pygame.mixer.Sound(os.path.join(path2, 'freeze.wav'))
 freeze_sound.set_volume(0.4)
+
 dmg_sound = pygame.mixer.Sound(os.path.join(path2, 'dmg.wav'))
 dmg_sound.set_volume(0.5)
+
 fall_sound = pygame.mixer.Sound(os.path.join(path2, 'fall.wav'))
 fall_sound.set_volume(1)
-powerup_sound = pygame.mixer.Sound(os.path.join(path2, 'freeze.wav'))
-powerup_sound.set_volume(0)
+
+powerup_sound = pygame.mixer.Sound(os.path.join(path2, 'powerup.wav'))
+powerup_sound.set_volume(0.3)
 
 
 
@@ -219,12 +223,12 @@ class Player(Alive):
                 # skok boost
                 if e.type == 1:
                     self.jump_boost = True
-                    self.jump_boost_amount += 5
+                    self.jump_boost_amount += 2
 
                 # odpornosc boost
                 if e.type == 2:
                     self.immunity = True
-                    self.immunity_amount += 5
+                    self.immunity_amount += 2
 
         # minusowe punkty za podługe
         if self.rect.bottom >= 740:
