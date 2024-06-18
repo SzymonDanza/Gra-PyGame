@@ -31,7 +31,7 @@ for file_name in file_names:
 
 difficulty = 1
 
-animation_list = [IMAGES['kw1'],IMAGES['kw2'],IMAGES['kw3']]
+
 
 other_platform_list = [IMAGES['vanishStart'], IMAGES['vanishMiddle'], IMAGES['vanishEnd'],
                        IMAGES['mrozStart'], IMAGES['mrozMiddle'], IMAGES['mrozEnd'],
@@ -40,7 +40,7 @@ powerups_list = [IMAGES['powerUp1'], IMAGES['powerUp2']]
 enemy_list = [IMAGES['kw1'], IMAGES['kwmroz']]
 enemy_animation = [[IMAGES['cir1'], IMAGES['cir2'], IMAGES['cir3']],[IMAGES['tri1'], IMAGES['tri2'], IMAGES['tri3']]]
 Test_Level = Level(BACKGROUND, 0, 0, screen, IMAGES['platformStart'],IMAGES['platformMiddle'],IMAGES['platformEnd'], other_platform_list, powerups_list, difficulty, enemy_list, enemy_animation )
-animation_list = [IMAGES['kw1'], IMAGES['kw2'], IMAGES['kw3']]
+animation_list = [IMAGES['kw1'], IMAGES['kwm1'], IMAGES['kw11'], IMAGES['kw2'], IMAGES['kwm2'], IMAGES['kw22'], IMAGES['kw3'], IMAGES['kwm3'], IMAGES['kw33']]
 
 other_images_player = [IMAGES['kwmroz']]
 Test = Player(IMAGES['kw1'], 100, 100, 2, Test_Level, other_images_player,animation_list)
