@@ -1,12 +1,28 @@
 from asyncio import sleep
 import random
+import os
 
 import pygame
+path2 = os.path.join(os.getcwd(), 'sounds')
+pygame.mixer.init()
+
 
 YELLOW = pygame.color.THECOLORS['yellow']
 LIGHTGREEN = pygame.color.THECOLORS['lightgreen']
 DARKRED = pygame.color.THECOLORS['darkred']
 DARKBLUE = pygame.color.THECOLORS['darkblue']
+
+
+jump_sound = pygame.mixer.Sound(os.path.join(path2, 'freeze.wav'))
+freeze_sound = pygame.mixer.Sound(os.path.join(path2, 'freeze.wav'))
+dmg_sound = pygame.mixer.Sound(os.path.join(path2, 'bonus.ogg'))
+fall_sound = pygame.mixer.Sound(os.path.join(path2, 'bonus.ogg'))
+powerup_sound = pygame.mixer.Sound(os.path.join(path2, 'bonus.ogg'))
+
+
+
+
+
 
 
 class Base(pygame.sprite.Sprite):
@@ -104,6 +120,7 @@ class Player(Alive):
                 else:
                     self.rect.x += 7
             if key[pygame.K_SPACE] and self.on_ground:
+                jump_sound.play()
                 if self.jump_boost:
                     self.y_speed = -30
                     self.jump_boost_amount -= 1
@@ -148,6 +165,7 @@ class Player(Alive):
 
                     if e.type == 2 and not self.immunity:
                         self.frozen = True
+                        freeze_sound.play()
                         self.image = self.other_images[0]
                         self.starttime = pygame.time.get_ticks()
 
@@ -181,6 +199,7 @@ class Player(Alive):
             self.slip = False
 
         if pygame.sprite.spritecollideany(self, self.level.set_of_powerups):
+            powerup_sound.play()
 
             self.points += 5
             for e in self.level.set_of_powerups:
@@ -191,19 +210,22 @@ class Player(Alive):
 
                 if e.type == 2:
                     self.immunity = True
-                    self.immunity_amount += 7
+                    self.immunity_amount += 5
 
         if self.rect.bottom >= 740:
             if pygame.time.get_ticks() - self.last_points_loss >= 1000:
+                fall_sound.play()
                 self.last_points_loss = pygame.time.get_ticks()
                 self.points -= 10
 
         if pygame.sprite.spritecollideany(self, self.level.set_of_enemies):
+
             for e in self.level.set_of_enemies:
                 if (pygame.sprite.collide_rect(self, e) and (self.rect.bottom-40 < e.rect.top) and e.type == 1) or (pygame.sprite.collide_rect(self, e) and (self.rect.bottom > e.rect.top+50) and e.type == 2):
                     e.kill()
                     self.points += 5
                 elif (pygame.sprite.collide_rect(self, e) and (self.rect.bottom > e.rect.top) and e.type == 1) or (True and e.type == 2):
+                    dmg_sound.play()
 
                     ##self.rect.y += 10
                     if self.rect.left < e.rect.left and e.type == 1:

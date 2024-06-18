@@ -128,7 +128,7 @@ while window_open:
         if Test.immunity:
             Test.boost_two_text.draw_text(screen)
 
-        if Test.points >= 100:
+        if Test.points >= 10:
             game_won = True
             window_open = False
         if Test.points < -20:
